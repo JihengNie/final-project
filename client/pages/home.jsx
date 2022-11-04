@@ -1,10 +1,10 @@
 import React from 'react';
-import HelloWorld from '../components/hello-world';
+import CreateAccount from '../components/create-account';
 
 export default function Home(props) {
   return (
     <div>
-      <HelloWorld />
+      <CreateAccount />
     </div>
   );
 }
