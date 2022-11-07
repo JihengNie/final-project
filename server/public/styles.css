@@ -20,30 +20,30 @@ input[type="submit"] {
   flex-direction: column;
 }
 
-.fa-face-smile {
+.fa-face-smile-style {
   color: #34a604;
   margin: 2rem 0;
 }
 
-.fa-image,
-.fa-check {
+.fa-image-style,
+.fa-check-style {
   color: #808080;
   cursor: pointer;
 }
 
-.check-holder {
+.fa-check-holder {
   margin: auto;
   margin-top: 1.5rem;
   max-width: 10rem;
 }
 
-.fa-image {
+.fa-image-style {
   position: relative;
   top: 40%;
   margin: auto;
 }
 
-.fa-check {
+.fa-check-style {
   color: #808080;
   border: 2px solid #808080;
   border-radius: 50%;
@@ -51,7 +51,7 @@ input[type="submit"] {
   transition: 0.25s;
 }
 
-.fa-check:hover {
+.fa-check-style:hover {
   color: #34a604;
   border: 2px solid #34a604;
 }
