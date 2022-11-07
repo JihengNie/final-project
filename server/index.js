@@ -1,5 +1,4 @@
 require('dotenv/config');
-const path = require('path');
 const pg = require('pg');
 const express = require('express');
 const ClientError = require('./client-error');
@@ -18,9 +17,6 @@ const db = new pg.Pool({
   }
 });
 
-const publicPath = path.join(__dirname, 'public');
-
-app.use(express.static(publicPath));
 app.use(express.json());
 
 app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
@@ -38,18 +34,6 @@ app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
   db.query(sql, params)
     .then(result => {
       res.json(result.rows[0]);
-    })
-    .catch(err => next(err));
-});
-
-app.get('/api/accounts', (req, res, next) => {
-  const sql = `
-    select *
-    from "accounts"
-  `;
-  db.query(sql)
-    .then(result => {
-      res.json(result.rows);
     })
     .catch(err => next(err));
 });
