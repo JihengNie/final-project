@@ -1,3 +1,3 @@
 # final-project
 
-A full stack JavaScript solo project.
+A full stack web application for users to rate other users
