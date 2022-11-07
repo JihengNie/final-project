@@ -11,10 +11,6 @@ app.get('/api/hello', (req, res) => {
   res.json({ hello: 'world' });
 });
 
-app.get('/api/uploads', (req, res) => {
-  res.json({ hello: 'world' });
-});
-
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
