@@ -42,10 +42,6 @@ app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/api/hello', (req, res) => {
-  res.json({ hello: 'world' });
-});
-
 app.get('/api/accounts', (req, res, next) => {
   const sql = `
     select *
