@@ -1,4 +1,5 @@
 import React from 'react';
+import ViewAccount from '../components/view-account';
 
 export default class CreateAccount extends React.Component {
   constructor(props) {
@@ -37,6 +38,7 @@ export default class CreateAccount extends React.Component {
           username: ''
         });
         this.fileInputRef.current.value = null;
+        window.localStorage.setItem('username', this.state.username);
       })
       .catch(err => console.error(err));
     this.setState({ imgSrc: null });
@@ -44,6 +46,10 @@ export default class CreateAccount extends React.Component {
   }
 
   render() {
+    const currentUsername = window.localStorage.getItem('username');
+    if (currentUsername) {
+      return <ViewAccount username={currentUsername} />;
+    }
     return (
       <div className='container'>
         <div className='row flex-center'>

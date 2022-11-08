@@ -22,7 +22,7 @@ input[type="submit"] {
 
 .fa-face-smile-style {
   color: #34a604;
-  margin: 2rem 0;
+  margin: 1.5rem 0;
 }
 
 .fa-image-style,
@@ -84,16 +84,17 @@ input[type="submit"] {
   max-height: 100%;
   height: 100%;
   border-radius: 8px;
-  cursor: pointer;
 }
 
 .view-profile-name {
   color: #808080;
-  font-size: 3.25rem;
+  font-size: 2.25rem;
   font-weight: 100;
   font-family: Roboto, sans-serif;
   margin: 0;
   padding: 0;
+  width: 16rem;
+  overflow: hidden;
 }
 
 /* ViewingAccount CSS */

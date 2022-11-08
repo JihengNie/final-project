@@ -19,6 +19,21 @@ const db = new pg.Pool({
 
 app.use(express.json());
 
+app.get('/api/accounts/:username', (req, res, next) => {
+  const sql = `
+    select *
+    from "accounts"
+    where "username" = $1
+  `;
+  const username = req.params.username;
+  const params = [username];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
 app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
   const { newUsername } = req.body;
   if (!newUsername) {
