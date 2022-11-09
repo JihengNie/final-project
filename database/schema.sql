@@ -8,7 +8,7 @@ create schema "public";
 
 CREATE TABLE "public"."accounts" (
 	"accountId" serial NOT NULL,
-	"username" TEXT NOT NULL,
+	"username" TEXT NOT NULL UNIQUE,
 	"photoUrl" TEXT NOT NULL,
 	"currentRating" DECIMAL NOT NULL,
 	"happyLevel" TEXT NOT NULL,

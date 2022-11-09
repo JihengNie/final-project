@@ -37,6 +37,8 @@ export default class CreateAccount extends React.Component {
           username: ''
         });
         this.fileInputRef.current.value = null;
+        window.localStorage.setItem('username', this.state.username);
+        window.location.hash = `#view-account?username=${this.state.username}`;
       })
       .catch(err => console.error(err));
     this.setState({ imgSrc: null });
@@ -79,6 +81,7 @@ export default class CreateAccount extends React.Component {
                     type='file'
                     name='profileImg'
                     ref={this.fileInputRef}
+                    required
                     accept=".png, .jpg, .jpeg, .gif" />
               </div>
               <div className='column-full fa-check-holder'>

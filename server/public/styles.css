@@ -22,7 +22,7 @@ input[type="submit"] {
 
 .fa-face-smile-style {
   color: #34a604;
-  margin: 2rem 0;
+  margin: 1.5rem 0;
 }
 
 .fa-image-style,
@@ -84,5 +84,52 @@ input[type="submit"] {
   max-height: 100%;
   height: 100%;
   border-radius: 8px;
-  cursor: pointer;
+}
+
+.view-profile-name {
+  color: #808080;
+  font-size: 2.25rem;
+  font-weight: 100;
+  font-family: Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 16rem;
+  overflow: hidden;
+}
+
+/* ViewingAccount CSS */
+
+.fa-star-holder {
+  font-size: 2.5rem;
+  margin-top: 1.5rem;
+  color: #626262;
+}
+
+.fa-star-style {
+  margin: 0 0.25rem;
+}
+
+.star-div {
+  color: #626262;
+  position: relative;
+}
+
+.happy {
+  color: #34a604;
+}
+
+.content {
+  color: #d7c9b4;
+}
+
+.angry {
+  color: red;
+}
+
+.half-star {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
 }

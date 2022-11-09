@@ -1,3 +1,3 @@
 insert into "accounts" ("username", "photoUrl", "currentRating", "happyLevel")
-values ('John Smith', 'database/images/example.jpg', 3, 'happy'),
-('Jane Smith', 'database/images/example.jpg', 3.5, 'mad');
+values ('John Smith', '/images/example1.jpg', 3, 'angry'),
+('Jane Smith', '/images/example2.jpg', 3.5, 'content');
