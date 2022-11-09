@@ -14,6 +14,7 @@ export default class AccountCard extends React.Component {
     this.smileyFaceColor = this.smileyFaceColor.bind(this);
     this.handleHomeClick = this.handleHomeClick.bind(this);
     this.displayingName = this.displayingName.bind(this);
+    this.displayingRating = this.displayingRating.bind(this);
   }
 
   smileyFaceColor(state) {
@@ -57,6 +58,13 @@ export default class AccountCard extends React.Component {
     );
   }
 
+  displayingRating() {
+    if (this.props.hideRating) {
+      return;
+    }
+    return <h1> {this.state.currentRating}</h1>;
+  }
+
   displayingName() {
     if (this.props.hideName) {
       return;
@@ -84,11 +92,32 @@ export default class AccountCard extends React.Component {
       .catch(err => console.error(err));
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.username !== prevProps.username) {
+      const requestObj = {
+        method: 'GET'
+      };
+      fetch(`/api/accounts/${this.props.username}`, requestObj)
+        .then(result => result.json())
+        .then(result => {
+          this.setState({
+            currentRating: result.currentRating,
+            happyLevel: result.happyLevel,
+            photoUrl: result.photoUrl
+          });
+        })
+        .catch(err => console.error(err));
+    }
+  }
+
   render() {
     return (
       <div className='row'>
         <div className='column-full flex-center'>
           {this.displayingName()}
+        </div>
+        <div className='column-full user-rating-style'>
+          {this.displayingRating()}
         </div>
         <div className='column-full'>
           <div className='column-full image-upload-holder flex-center'>

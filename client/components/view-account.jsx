@@ -34,14 +34,14 @@ export default class ViewAccount extends React.Component {
       <div className='container'>
         <div className='row flex-center'>
           <div className='column-third-always left-align '>
-            <i onClick={this.handleHomeClick() /* Change later */} className="fa-solid fa-house-chimney fa-4x fa-house-style" />
+            <i onClick={this.handleHomeClick} className="fa-solid fa-house-chimney fa-4x fa-house-style" />
           </div>
           <div className='column-third-always'>
             <Smiley happyLevel={this.state.happyLevel} />
           </div>
           <div className='column-third-always' />
         </div>
-        <AccountCard username={this.props.username}/>
+        <AccountCard username={this.props.username} view="current-user"/>
       </div>
     );
   }

@@ -19,6 +19,24 @@ const db = new pg.Pool({
 
 app.use(express.json());
 
+app.get('/api/other-accounts/', (req, res, next) => {
+  const sql = `
+    select "username"
+    from "accounts"
+  `;
+  db.query(sql)
+    .then(result => {
+      if (!result.rows[0]) {
+        res.status(404).json({
+          error: 'No users found'
+        });
+      } else {
+        res.json(result.rows);
+      }
+    })
+    .catch(err => next(err));
+});
+
 app.get('/api/accounts/:username', (req, res, next) => {
   const sql = `
     select *

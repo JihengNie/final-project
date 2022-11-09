@@ -24,12 +24,11 @@
 .column-one-third,
 .column-half {
   width: 100%;
-  padding: 0 1.5rem;
 }
 
 @media screen and (min-width: 768px) {
   .container {
-    max-width: 900px;
+    max-width: 986px;
   }
 
   .column-full,
