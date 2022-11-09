@@ -4,7 +4,6 @@ export default class ViewAccount extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: props.username,
       photoUrl: null,
       happyLevel: null,
       currentRating: null
@@ -26,7 +25,7 @@ export default class ViewAccount extends React.Component {
     const neturalStar = <i className="fa-solid fa-star fa-star-style" />;
     const halfStar = (
       <div className="star-div">
-        {neturalStar} <span className={`half-star-${state.happyLevel}`}>{neturalStar}</span>
+        {neturalStar} <span className={`half-star ${state.happyLevel}`}>{neturalStar}</span>
       </div>
     );
     const starArray = [neturalStar, fullStar, halfStar];
@@ -56,7 +55,7 @@ export default class ViewAccount extends React.Component {
     const requestObj = {
       method: 'GET'
     };
-    fetch(`/api/accounts/${this.state.username}`, requestObj)
+    fetch(`/api/accounts/${this.props.username}`, requestObj)
       .then(result => result.json())
       .then(result => {
         this.setState({
@@ -78,7 +77,7 @@ export default class ViewAccount extends React.Component {
         </div>
         <div className='row'>
           <div className='column-full flex-center'>
-            <h1 className='view-profile-name'>{this.state.username}</h1>
+            <h1 className='view-profile-name'>{this.props.username}</h1>
           </div>
           <div className='column-full'>
             <div className='column-full image-upload-holder flex-center'>

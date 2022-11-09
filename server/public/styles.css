@@ -126,29 +126,10 @@ input[type="submit"] {
   color: red;
 }
 
-.half-star-happy {
+.half-star {
   position: absolute;
   top: 0;
   left: 0;
   width: 50%;
-  color: #34a604;
-  overflow: hidden;
-}
-
-.half-star-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
-  color: #d7c9b4;
-  overflow: hidden;
-}
-
-.half-star-angry {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
-  color: red;
   overflow: hidden;
 }

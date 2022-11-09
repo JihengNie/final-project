@@ -29,7 +29,13 @@ app.get('/api/accounts/:username', (req, res, next) => {
   const params = [username];
   db.query(sql, params)
     .then(result => {
-      res.json(result.rows[0]);
+      if (!result.rows[0]) {
+        res.status(404).json({
+          error: 'No users found'
+        });
+      } else {
+        res.json(result.rows[0]);
+      }
     })
     .catch(err => next(err));
 });

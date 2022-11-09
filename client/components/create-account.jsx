@@ -1,5 +1,4 @@
 import React from 'react';
-import ViewAccount from '../components/view-account';
 
 export default class CreateAccount extends React.Component {
   constructor(props) {
@@ -39,6 +38,7 @@ export default class CreateAccount extends React.Component {
         });
         this.fileInputRef.current.value = null;
         window.localStorage.setItem('username', this.state.username);
+        window.location.hash = `#view-account?username=${this.state.username}`;
       })
       .catch(err => console.error(err));
     this.setState({ imgSrc: null });
@@ -46,10 +46,6 @@ export default class CreateAccount extends React.Component {
   }
 
   render() {
-    const currentUsername = window.localStorage.getItem('username');
-    if (currentUsername) {
-      return <ViewAccount username={currentUsername} />;
-    }
     return (
       <div className='container'>
         <div className='row flex-center'>
@@ -85,6 +81,7 @@ export default class CreateAccount extends React.Component {
                     type='file'
                     name='profileImg'
                     ref={this.fileInputRef}
+                    required
                     accept=".png, .jpg, .jpeg, .gif" />
               </div>
               <div className='column-full fa-check-holder'>
