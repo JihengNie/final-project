@@ -11,12 +11,7 @@ export default class ViewOtherAccount extends React.Component {
       otherUsers: null,
       currentIndex: 1
     };
-    this.handleHomeClick = this.handleHomeClick.bind(this);
     this.handleDirectionClick = this.handleDirectionClick.bind(this);
-  }
-
-  handleHomeClick() {
-    window.location.hash = '#view-other-accounts';
   }
 
   handleDirectionClick(event) {
@@ -89,7 +84,7 @@ export default class ViewOtherAccount extends React.Component {
         <div className='container'>
           <div className='row flex-center'>
             <div className='column-third-always left-align '>
-              <i onClick={this.handleHomeClick} className="fa-solid fa-house-chimney fa-4x fa-house-style" />
+              <a href='#view-other-accounts'><i className="fa-solid fa-house-chimney fa-4x fa-house-style" /></a>
             </div>
             <div className='column-third-always'>
               <Smiley happyLevel={this.state.happyLevel}/>
