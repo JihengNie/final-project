@@ -11,7 +11,6 @@ CREATE TABLE "public"."accounts" (
 	"username" TEXT NOT NULL UNIQUE,
 	"photoUrl" TEXT NOT NULL,
 	"currentRating" DECIMAL NOT NULL,
-	"happyLevel" TEXT NOT NULL,
 	CONSTRAINT "accounts_pk" PRIMARY KEY ("accountId")
 ) WITH (
   OIDS=FALSE

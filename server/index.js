@@ -57,8 +57,8 @@ app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
   }
   const imgUrl = `/images/${req.file.filename}`;
   const sql = `
-  insert into "accounts" ("username", "photoUrl", "currentRating", "happyLevel")
-  values ($1, $2, '5', 'happy')
+  insert into "accounts" ("username", "photoUrl", "currentRating")
+  values ($1, $2, '5')
   returning *
   `;
   const params = [newUsername, imgUrl];

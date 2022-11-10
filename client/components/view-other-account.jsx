@@ -7,8 +7,8 @@ export default class ViewOtherAccount extends React.Component {
     super(props);
     this.state = {
       username: null,
-      happyLevel: null,
       otherUsers: null,
+      currentRating: null,
       currentIndex: 1
     };
     this.handleDirectionClick = this.handleDirectionClick.bind(this);
@@ -47,7 +47,7 @@ export default class ViewOtherAccount extends React.Component {
       .then(result => result.json())
       .then(result => {
         this.setState({
-          happyLevel: result.happyLevel
+          currentRating: result.currentRating
         });
       })
       .catch(err => console.error(err));
@@ -87,17 +87,17 @@ export default class ViewOtherAccount extends React.Component {
               <a href='#view-other-accounts'><i className="fa-solid fa-house-chimney fa-4x fa-house-style" /></a>
             </div>
             <div className='column-third-always'>
-              <Smiley happyLevel={this.state.happyLevel}/>
+              <Smiley currentRating={this.state.currentRating}/>
             </div>
-            <div className='column-third-always' />
+            <div className='column-third-always'/>
           </div>
           <div className='flex-center row-no-wrap'>
             <i onClick={this.handleDirectionClick} className="fa-solid fa-chevron-left chevron-style left" />
-            <div className='none-focus-cards'>
+            <div className='none-focus-cards left'>
               <AccountCard username={userPreviousIndex} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards' />
             </div>
             <AccountCard username={userCurrentIndex} />
-            <div className='none-focus-cards'>
+            <div className='none-focus-cards right'>
               <AccountCard username={userNextIndex} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards overflow' />
             </div>
             <i onClick={this.handleDirectionClick} className="fa-solid fa-chevron-right chevron-style right" />

@@ -6,13 +6,8 @@ export default class ViewAccount extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      happyLevel: null
+      currentRating: null
     };
-    this.handleHomeClick = this.handleHomeClick.bind(this);
-  }
-
-  handleHomeClick() {
-    window.location.hash = '#view-other-accounts';
   }
 
   componentDidMount() {
@@ -23,7 +18,7 @@ export default class ViewAccount extends React.Component {
       .then(result => result.json())
       .then(result => {
         this.setState({
-          happyLevel: result.happyLevel
+          currentRating: result.currentRating
         });
       })
       .catch(err => console.error(err));
@@ -34,10 +29,10 @@ export default class ViewAccount extends React.Component {
       <div className='container'>
         <div className='row flex-center'>
           <div className='column-third-always left-align '>
-            <i onClick={this.handleHomeClick} className="fa-solid fa-house-chimney fa-4x fa-house-style" />
+            <a href='#view-other-accounts'><i className="fa-solid fa-house-chimney fa-4x fa-house-style" /></a>
           </div>
           <div className='column-third-always'>
-            <Smiley happyLevel={this.state.happyLevel} />
+            <Smiley currentRating={this.state.currentRating} />
           </div>
           <div className='column-third-always' />
         </div>

@@ -156,6 +156,16 @@ input[type="submit"] {
   margin-top: 6rem;
 }
 
+.left {
+  position: relative;
+  left: 6rem;
+}
+
+.right {
+  position: relative;
+  right: 6rem;
+}
+
 .user-rating-style {
   color: #808080;
   font-size: 1rem;
@@ -177,15 +187,5 @@ input[type="submit"] {
     filter: opacity(25%);
     margin-top: 3rem;
     display: none;
-  }
-
-  .left {
-    position: relative;
-    left: 1.5rem;
-  }
-
-  .right {
-    position: relative;
-    right: 1.5rem;
   }
 }

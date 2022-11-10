@@ -6,19 +6,30 @@ export default class AccountCard extends React.Component {
     super(props);
     this.state = {
       photoUrl: null,
-      happyLevel: null,
+      happyLevel: 'happy',
       currentRating: null
     };
     this.calculatingStars = this.calculatingStars.bind(this);
     this.moodStar = this.moodStar.bind(this);
     this.smileyFaceColor = this.smileyFaceColor.bind(this);
-    this.handleHomeClick = this.handleHomeClick.bind(this);
     this.displayingName = this.displayingName.bind(this);
     this.displayingRating = this.displayingRating.bind(this);
+    this.createHappyLevel = this.createHappyLevel.bind(this);
   }
 
   smileyFaceColor(state) {
-    return <Smiley happyLevel={state.happyLevel} />;
+    return <Smiley currentRating={state.currentRating} />;
+  }
+
+  createHappyLevel(rating) {
+    const currentRating = parseInt(rating);
+    if (currentRating >= 4) {
+      return 'happy';
+    } else if (currentRating >= 3) {
+      return 'content';
+    } else {
+      return 'angry';
+    }
   }
 
   moodStar(state) {
@@ -72,10 +83,6 @@ export default class AccountCard extends React.Component {
     return <h1 className='view-profile-name'>{this.props.username}</h1>;
   }
 
-  handleHomeClick() {
-    window.location.hash = '#view-other-accounts';
-  }
-
   componentDidMount() {
     const requestObj = {
       method: 'GET'
@@ -85,8 +92,8 @@ export default class AccountCard extends React.Component {
       .then(result => {
         this.setState({
           currentRating: result.currentRating,
-          happyLevel: result.happyLevel,
-          photoUrl: result.photoUrl
+          photoUrl: result.photoUrl,
+          happyLevel: this.createHappyLevel(result.currentRating)
         });
       })
       .catch(err => console.error(err));
@@ -102,8 +109,8 @@ export default class AccountCard extends React.Component {
         .then(result => {
           this.setState({
             currentRating: result.currentRating,
-            happyLevel: result.happyLevel,
-            photoUrl: result.photoUrl
+            photoUrl: result.photoUrl,
+            happyLevel: this.createHappyLevel(result.currentRating)
           });
         })
         .catch(err => console.error(err));
