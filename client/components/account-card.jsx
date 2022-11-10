@@ -112,7 +112,7 @@ export default class AccountCard extends React.Component {
 
   render() {
     return (
-      <div className='row'>
+      <div className='row max-width-500px '>
         <div className='column-full flex-center'>
           {this.displayingName()}
         </div>

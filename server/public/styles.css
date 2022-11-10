@@ -23,6 +23,7 @@ input[type="submit"] {
 .fa-face-smile-style {
   color: #34a604;
   margin: 1.5rem 0;
+  cursor: pointer;
 }
 
 .fa-image-style,
@@ -104,7 +105,7 @@ input[type="submit"] {
   margin: 0;
   padding: 0;
   width: 30rem;
-  overflow: hidden;
+  word-break: break-word;
 }
 
 .fa-star-holder {
