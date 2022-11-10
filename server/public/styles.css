@@ -23,6 +23,7 @@ input[type="submit"] {
 .fa-face-smile-style {
   color: #34a604;
   margin: 1.5rem 0;
+  cursor: pointer;
 }
 
 .fa-image-style,
@@ -56,6 +57,16 @@ input[type="submit"] {
   border: 2px solid #34a604;
 }
 
+.fa-house-style {
+  color: #808080;
+  margin: 1.5rem 2rem;
+  cursor: pointer;
+}
+
+.left-align {
+  text-align: left;
+}
+
 .new-user-name-style {
   background-color: #131425;
   padding: 1rem 3rem;
@@ -72,7 +83,7 @@ input[type="submit"] {
   background-color: #2a2d41;
   padding: 0;
   margin: auto;
-  margin-top: 2rem;
+  margin-top: 1rem;
   border-radius: 8px;
   width: 16rem;
   height: 20rem;
@@ -88,16 +99,14 @@ input[type="submit"] {
 
 .view-profile-name {
   color: #808080;
-  font-size: 2.25rem;
+  font-size: 3.25rem;
   font-weight: 100;
   font-family: Roboto, sans-serif;
   margin: 0;
   padding: 0;
-  width: 16rem;
-  overflow: hidden;
+  width: 30rem;
+  word-break: break-word;
 }
-
-/* ViewingAccount CSS */
 
 .fa-star-holder {
   font-size: 2.5rem;
@@ -132,4 +141,51 @@ input[type="submit"] {
   left: 0;
   width: 50%;
   overflow: hidden;
+}
+
+.chevron-style {
+  color: #615c5e;
+  margin: auto;
+  padding: auto;
+  font-size: 3rem;
+  cursor: pointer;
+}
+
+.none-focus-cards {
+  filter: opacity(25%);
+  margin-top: 6rem;
+}
+
+.left {
+  position: relative;
+  left: 6rem;
+}
+
+.right {
+  position: relative;
+  right: 6rem;
+}
+
+.user-rating-style {
+  color: #808080;
+  font-size: 1rem;
+  font-weight: 100;
+  font-family: Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: start;
+}
+
+.user-rating-style h1 {
+  margin: 0;
+  text-align: center;
+  padding-right: 10rem;
+}
+
+@media screen and (max-width: 768px) {
+  .none-focus-cards {
+    filter: opacity(25%);
+    margin-top: 3rem;
+    display: none;
+  }
 }

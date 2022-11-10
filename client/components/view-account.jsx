@@ -1,54 +1,13 @@
 import React from 'react';
+import Smiley from './smiley';
+import AccountCard from './account-card';
 
 export default class ViewAccount extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      photoUrl: null,
-      happyLevel: null,
       currentRating: null
     };
-    this.calculatingStars = this.calculatingStars.bind(this);
-    this.moodStar = this.moodStar.bind(this);
-    this.smileyFaceColor = this.smileyFaceColor.bind(this);
-  }
-
-  smileyFaceColor(state) {
-    return (<i className={`fa-regular fa-4x fa-face-smile fa-face-smile-style ${state.happyLevel}`} />);
-  }
-
-  moodStar(state) {
-    if (state.happyLevel !== 'happy' && state.happyLevel !== 'angry' && state.happyLevel !== 'content') {
-      state.happyLevel = 'happy';
-    }
-    const fullStar = <i className={`fa-solid fa-star fa-star-style ${state.happyLevel}`} />;
-    const neturalStar = <i className="fa-solid fa-star fa-star-style" />;
-    const halfStar = (
-      <div className="star-div">
-        {neturalStar} <span className={`half-star ${state.happyLevel}`}>{neturalStar}</span>
-      </div>
-    );
-    const starArray = [neturalStar, fullStar, halfStar];
-    return starArray;
-  }
-
-  calculatingStars(state) {
-    const starArray = this.moodStar(this.state);
-    const fiveStarArray = [];
-    for (let i = 0; i < Math.floor(state.currentRating); i++) {
-      fiveStarArray.push(starArray[1]);
-    }
-    if (Math.floor(state.currentRating) < state.currentRating) {
-      fiveStarArray.push(starArray[2]);
-    }
-    while (fiveStarArray.length < 5) {
-      fiveStarArray.push(starArray[0]);
-    }
-    return (
-      <>
-        {fiveStarArray[0]} {fiveStarArray[1]} {fiveStarArray[2]} {fiveStarArray[3]} {fiveStarArray[4]}
-      </>
-    );
   }
 
   componentDidMount() {
@@ -59,9 +18,7 @@ export default class ViewAccount extends React.Component {
       .then(result => result.json())
       .then(result => {
         this.setState({
-          currentRating: result.currentRating,
-          happyLevel: result.happyLevel,
-          photoUrl: result.photoUrl
+          currentRating: result.currentRating
         });
       })
       .catch(err => console.error(err));
@@ -71,23 +28,15 @@ export default class ViewAccount extends React.Component {
     return (
       <div className='container'>
         <div className='row flex-center'>
-          <div className='column-full'>
-            {this.smileyFaceColor(this.state)}
+          <div className='column-third-always left-align '>
+            <a href='#view-other-accounts'><i className="fa-solid fa-house-chimney fa-4x fa-house-style" /></a>
           </div>
+          <div className='column-third-always'>
+            <Smiley currentRating={this.state.currentRating} />
+          </div>
+          <div className='column-third-always' />
         </div>
-        <div className='row'>
-          <div className='column-full flex-center'>
-            <h1 className='view-profile-name'>{this.props.username}</h1>
-          </div>
-          <div className='column-full'>
-            <div className='column-full image-upload-holder flex-center'>
-              <img src={this.state.photoUrl} />
-            </div>
-          </div>
-          <div className='column-full flex-center fa-star-holder'>
-            {this.calculatingStars(this.state)}
-          </div>
-        </div>
+        <AccountCard username={this.props.username} view="current-user"/>
       </div>
     );
   }

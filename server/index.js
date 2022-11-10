@@ -19,6 +19,16 @@ const db = new pg.Pool({
 
 app.use(express.json());
 
+app.get('/api/other-accounts/', (req, res, next) => {
+  const sql = `
+    select "username"
+    from "accounts"
+  `;
+  db.query(sql)
+    .then(result => res.json(result.rows))
+    .catch(err => next(err));
+});
+
 app.get('/api/accounts/:username', (req, res, next) => {
   const sql = `
     select *
@@ -47,8 +57,8 @@ app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
   }
   const imgUrl = `/images/${req.file.filename}`;
   const sql = `
-  insert into "accounts" ("username", "photoUrl", "currentRating", "happyLevel")
-  values ($1, $2, '5', 'happy')
+  insert into "accounts" ("username", "photoUrl", "currentRating")
+  values ($1, $2, '5')
   returning *
   `;
   const params = [newUsername, imgUrl];
