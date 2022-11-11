@@ -36,7 +36,7 @@ export default class ViewAccount extends React.Component {
           </div>
           <div className='column-third-always' />
         </div>
-        <AccountCard username={this.props.username} view="current-user"/>
+        <AccountCard username={this.props.username} view="current-user" hideNewRating={true}/>
       </div>
     );
   }

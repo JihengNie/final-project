@@ -94,11 +94,11 @@ export default class ViewOtherAccount extends React.Component {
           <div className='flex-center row-no-wrap'>
             <i onClick={this.handleDirectionClick} className="fa-solid fa-chevron-left chevron-style left" />
             <div className='none-focus-cards left'>
-              <AccountCard username={userPreviousIndex} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards' />
+              <AccountCard username={userPreviousIndex} hideNewRating={true} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards' />
             </div>
             <AccountCard username={userCurrentIndex} />
             <div className='none-focus-cards right'>
-              <AccountCard username={userNextIndex} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards overflow' />
+              <AccountCard username={userNextIndex} hideNewRating={true} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards overflow' />
             </div>
             <i onClick={this.handleDirectionClick} className="fa-solid fa-chevron-right chevron-style right" />
           </div>
