@@ -69,6 +69,45 @@ app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.post('/api/uploads/ratings', uploadsMiddleware, (req, res, next) => {
+  let { whoRated, ratedWho, rating } = req.body;
+  rating = Number(rating);
+  if (!whoRated || !ratedWho || !rating) {
+    throw new ClientError(400, 'Who rated, who is being rated. and rating are required fields');
+  } else if (rating < 0 || rating > 10) {
+    throw new ClientError(400, 'Rating is outside of range');
+  }
+  const sql = `
+    insert into "ratings" ("whoRated", "ratedWho", "rating")
+
+    SELECT "whoRated", "ratedWho", $3 as "rating"
+    from
+    (SELECT "username",
+      "accountId" as "whoRated",
+      1 as "joinId"
+    from "accounts"
+    where "username" = $1) as "a"
+
+    join
+
+    (SELECT "username",
+      "accountId" as "ratedWho",
+      1 as "joinId"
+    from "accounts"
+    where "username" = $2) as "b"
+
+    using ("joinId")
+    returning *
+    ;
+  `;
+  const params = [whoRated, ratedWho, rating];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {

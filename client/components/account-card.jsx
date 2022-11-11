@@ -9,6 +9,7 @@ export default class AccountCard extends React.Component {
       happyLevel: 'happy',
       currentRating: null,
       ratingValue: 0,
+      ratingUsername: this.props.username,
       ratingClicked: false
     };
     this.calculatingStars = this.calculatingStars.bind(this);

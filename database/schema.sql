@@ -42,7 +42,7 @@ CREATE TABLE "public"."ratings" (
 	"ratingId" serial NOT NULL,
 	"whoRated" int NOT NULL,
 	"ratedWho" int NOT NULL,
-	"rating" int NOT NULL
+	"rating" DECIMAL NOT NULL
 ) WITH (
   OIDS=FALSE
 );
