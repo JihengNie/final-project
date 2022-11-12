@@ -11,6 +11,7 @@ export default class CreateAccount extends React.Component {
     this.handleUpload = this.handleUpload.bind(this);
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.addingInitialRating = this.addingInitialRating.bind(this);
   }
 
   handleUpload(event) {
@@ -21,8 +22,21 @@ export default class CreateAccount extends React.Component {
     this.setState({ username: event.target.value });
   }
 
+  addingInitialRating() {
+    const form2 = new FormData();
+    form2.append('ratedWho', this.state.username);
+    const requestObj2 = {
+      method: 'POST',
+      body: form2
+    };
+    fetch('/api/uploads/ratings/sign-up', requestObj2)
+      .then(result => result.json())
+      .catch(err => console.error(err));
+  }
+
   handleSubmit(event) {
     event.preventDefault();
+
     const form = new FormData();
     form.append('newUsername', this.state.username);
     form.append('image', this.fileInputRef.current.files[0]);
@@ -36,6 +50,7 @@ export default class CreateAccount extends React.Component {
         this.setState({
           username: ''
         });
+        this.addingInitialRating();
         this.fileInputRef.current.value = null;
         window.localStorage.setItem('username', this.state.username);
         window.location.hash = `#view-account?username=${this.state.username}`;

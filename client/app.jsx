@@ -33,6 +33,8 @@ export default class App extends React.Component {
       return <ViewAccount username={prevUsername} />;
     } else if (this.state.route.path === 'view-other-accounts') {
       return <ViewOtherAccount />;
+    } else {
+      return <CreateAccount/>;
     }
   }
 

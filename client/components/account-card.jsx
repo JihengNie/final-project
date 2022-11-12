@@ -10,9 +10,12 @@ export default class AccountCard extends React.Component {
       currentRating: null,
       ratingValue: 0,
       ratingUsername: this.props.username,
-      ratingClicked: false
+      ratingClicked: false,
+      userLoggedIn: window.localStorage.getItem('username'),
+      currentUsername: this.props.username,
+      toggleStarSystem: false
     };
-    this.calculatingStars = this.calculatingStars.bind(this);
+    this.displayingStars = this.displayingStars.bind(this);
     this.moodStar = this.moodStar.bind(this);
     this.smileyFaceColor = this.smileyFaceColor.bind(this);
     this.displayingName = this.displayingName.bind(this);
@@ -21,6 +24,8 @@ export default class AccountCard extends React.Component {
     this.displayingNewRating = this.displayingNewRating.bind(this);
     this.handleStarHover = this.handleStarHover.bind(this);
     this.handleStarClick = this.handleStarClick.bind(this);
+    this.handleCheckClick = this.handleCheckClick.bind(this);
+    this.handleXClick = this.handleXClick.bind(this);
   }
 
   smileyFaceColor(state) {
@@ -53,7 +58,10 @@ export default class AccountCard extends React.Component {
     return starArray;
   }
 
-  calculatingStars(happyLevel, rating) {
+  displayingStars(happyLevel, rating) {
+    if (this.props.hideStars) {
+      return;
+    }
     const starArray = this.moodStar(happyLevel);
     const fiveStarArray = [];
     for (let i = 0; i < Math.floor(rating); i++) {
@@ -64,9 +72,6 @@ export default class AccountCard extends React.Component {
     }
     while (fiveStarArray.length < 5) {
       fiveStarArray.push(starArray[0]);
-    }
-    if (this.props.hideStars) {
-      return;
     }
     return (
       <>
@@ -80,6 +85,52 @@ export default class AccountCard extends React.Component {
       return;
     }
     return <h1> {this.state.currentRating}</h1>;
+  }
+
+  handleXClick() {
+    this.setState({ toggleStarSystem: true });
+  }
+
+  handleCheckClick() {
+    const form = new FormData();
+    form.append('whoRated', this.state.userLoggedIn);
+    form.append('ratedWho', this.props.username);
+    form.append('rating', this.state.ratingValue / 2);
+    const requestObj = {
+      method: 'POST',
+      body: form
+    };
+    fetch('/api/uploads/ratings', requestObj)
+      .then(result => result.json())
+      .then(result => {
+        this.setState({
+          ratingValue: 0,
+          ratingClicked: false
+        });
+
+        const requestObj3 = {
+          method: 'GET'
+        };
+        fetch(`/api/accounts/new-ratings/${this.props.username}`, requestObj3)
+          .then(result => result.json())
+          .then(result => {
+            if (result.updatedRating) {
+              this.setState({
+                currentRating: result.updatedRating
+              });
+              const requestObj2 = {
+                method: 'PUT'
+              };
+              fetch(`/api/accounts/new-rating/${this.props.username}&${result.updatedRating}`, requestObj2)
+                .then(result => result.json())
+                // .then(result => { })
+                .catch(err => console.error(err));
+            }
+          })
+          .catch(err => console.error(err));
+      })
+      .catch(err => console.error(err));
+    this.setState({ toggleStarSystem: true });
   }
 
   handleStarClick(event) {
@@ -100,7 +151,7 @@ export default class AccountCard extends React.Component {
   }
 
   displayingNewRating() {
-    if (this.props.hideNewRating) {
+    if (this.props.hideNewRating || this.state.toggleStarSystem) {
       return;
     }
     const fiveStarsArray = [];
@@ -131,8 +182,8 @@ export default class AccountCard extends React.Component {
           </div>
         </div>
         <div className='fa-check-holder flex-center'>
-          <i className="fa-solid fa-2x fa-x fa-check-style rating-buttons-x-style" />
-          <i className="fa-solid fa-2x fa-check fa-check-style" />
+          <i onClick={this.handleXClick} className="fa-solid fa-2x fa-x fa-check-style rating-buttons-x-style" />
+          <i onClick={this.handleCheckClick} className="fa-solid fa-2x fa-check fa-check-style" />
         </div>
       </>
     );
@@ -198,7 +249,7 @@ export default class AccountCard extends React.Component {
             {this.displayingNewRating()}
           </div>
           <div className='flex-center fa-star-holder'>
-            {this.calculatingStars(this.state.happyLevel, this.state.currentRating)}
+            {this.displayingStars(this.state.happyLevel, this.state.currentRating)}
           </div>
         </div>
       </div>

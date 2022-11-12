@@ -96,7 +96,7 @@ export default class ViewOtherAccount extends React.Component {
             <div className='none-focus-cards left'>
               <AccountCard username={userPreviousIndex} hideNewRating={true} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards' />
             </div>
-            <AccountCard hideStars={true} username={userCurrentIndex} />
+            <AccountCard username={userCurrentIndex} />
             <div className='none-focus-cards right'>
               <AccountCard username={userNextIndex} hideNewRating={true} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards overflow' />
             </div>

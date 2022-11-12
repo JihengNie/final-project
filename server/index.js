@@ -19,6 +19,31 @@ const db = new pg.Pool({
 
 app.use(express.json());
 
+// ---------------------------- GET REQUESTS ---------------------//
+app.get('/api/accounts/new-ratings/:username', (req, res, next) => {
+  const sql = `
+    select round(avg("rating"), 2) as "updatedRating"
+    from "accounts"
+    left join "ratings"
+    ON "accountId" = "ratedWho"
+    Where "username" = $1
+    group by "accountId"
+  `;
+  const username = req.params.username;
+  const params = [username];
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows[0]) {
+        res.status(404).json({
+          error: 'No users found'
+        });
+      } else {
+        res.json(result.rows[0]);
+      }
+    })
+    .catch(err => next(err));
+});
+
 app.get('/api/other-accounts/', (req, res, next) => {
   const sql = `
     select "username"
@@ -50,6 +75,33 @@ app.get('/api/accounts/:username', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// ---------------------------- PUT (UPDATE) REQUESTS ---------------------//
+
+app.put('/api/accounts/new-rating/:username&:newRating', (req, res, next) => {
+  const sql = `
+    UPDATE "accounts"
+    SET "currentRating" = $2
+    WHERE "username" = $1
+    returning *
+  `;
+  const username = req.params.username;
+  const newRating = req.params.newRating;
+  const params = [username, newRating];
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows[0]) {
+        res.status(404).json({
+          error: 'No users found'
+        });
+      } else {
+        res.json(result.rows[0]);
+      }
+    })
+    .catch(err => next(err));
+});
+
+// ---------------------------- POST REQUESTS ---------------------//
+
 app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
   const { newUsername } = req.body;
   if (!newUsername) {
@@ -69,10 +121,34 @@ app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.post('/api/uploads/ratings/sign-up', uploadsMiddleware, (req, res, next) => {
+  const { ratedWho } = req.body;
+  if (!ratedWho) {
+    throw new ClientError(400, 'Who is being rated is a required field');
+  }
+  const sql = `
+    insert into "ratings" ("whoRated", "ratedWho", "rating")
+
+    SELECT 1 as "whoRated", "ratedWho", 5 as "rating"
+    from
+    (SELECT "username",
+      "accountId" as "ratedWho"
+    from "accounts"
+    where "username" = $1) as "a"
+    returning *;
+  `;
+  const params = [ratedWho];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
 app.post('/api/uploads/ratings', uploadsMiddleware, (req, res, next) => {
   let { whoRated, ratedWho, rating } = req.body;
   rating = Number(rating);
-  if (!whoRated || !ratedWho || !rating) {
+  if (!whoRated || !ratedWho) {
     throw new ClientError(400, 'Who rated, who is being rated. and rating are required fields');
   } else if (rating < 0 || rating > 10) {
     throw new ClientError(400, 'Rating is outside of range');
@@ -107,6 +183,8 @@ app.post('/api/uploads/ratings', uploadsMiddleware, (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+// ---------------------------- END REQUESTS ---------------------//
 
 app.use(errorMiddleware);
 
