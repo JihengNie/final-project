@@ -227,10 +227,25 @@ export default class AccountCard extends React.Component {
           });
         })
         .catch(err => console.error(err));
+      this.setState({
+        toggleStarSystem: false,
+        ratingValue: 0
+      });
     }
   }
 
   render() {
+    const currentFiveStarRating = (
+      <div className='flex-center fa-star-holder'>
+        {this.displayingStars(this.state.happyLevel, this.state.currentRating)}
+      </div>
+    );
+    const newFiveStarRating = (
+      <div className='flex-center-column'>
+        {this.displayingNewRating()}
+      </div>
+    );
+
     return (
       <div className='row max-width-500px '>
         <div className='column-full flex-center'>
@@ -245,12 +260,8 @@ export default class AccountCard extends React.Component {
           </div>
         </div>
         <div className='column-full'>
-          <div className='flex-center-column'>
-            {this.displayingNewRating()}
-          </div>
-          <div className='flex-center fa-star-holder'>
-            {this.displayingStars(this.state.happyLevel, this.state.currentRating)}
-          </div>
+          {this.state.toggleStarSystem ? currentFiveStarRating : newFiveStarRating}
+          {this.props.displayCurrentUserRating ? currentFiveStarRating : null}
         </div>
       </div>
     );

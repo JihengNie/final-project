@@ -33,7 +33,7 @@ export default class Smiley extends React.Component {
     const happyLevel = this.createHappyLevel(this.props.currentRating);
     return (
       <a href={`#view-account?username=${this.state.username}`}>
-        <i className={`fa-regular fa-4x fa-face-smile fa-face-smile-style ${happyLevel}`} />
+        <i className={`fa-regular fa-3x fa-face-smile fa-face-smile-style ${happyLevel}`} />
       </a>
     );
   }

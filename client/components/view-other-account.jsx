@@ -84,7 +84,7 @@ export default class ViewOtherAccount extends React.Component {
         <div className='container'>
           <div className='row flex-center'>
             <div className='column-third-always left-align '>
-              <a href='#view-other-accounts'><i className="fa-solid fa-house-chimney fa-4x fa-house-style" /></a>
+              <a href='#view-other-accounts'><i className="fa-solid fa-house-chimney fa-3x fa-house-style" /></a>
             </div>
             <div className='column-third-always'>
               <Smiley currentRating={this.state.currentRating}/>

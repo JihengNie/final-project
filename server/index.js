@@ -48,6 +48,7 @@ app.get('/api/other-accounts/', (req, res, next) => {
   const sql = `
     select "username"
     from "accounts"
+    where "username" != 'Admin'
   `;
   db.query(sql)
     .then(result => res.json(result.rows))
