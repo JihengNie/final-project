@@ -241,6 +241,14 @@ export default class AccountCard extends React.Component {
       </div>
     );
 
+    const form = (
+      <form className='comment-form-style'>
+        <label>
+          <input type='textarea' name="comment" autoComplete ='off' placeholder="Leave a comment"/>
+        </label>
+      </form>
+    );
+
     return (
       <div className='row max-width-500px '>
         <div className='column-full flex-center'>
@@ -251,7 +259,8 @@ export default class AccountCard extends React.Component {
         </div>
         <div className='column-full'>
           <div className='column-full image-upload-holder flex-center'>
-            <img src={this.state.photoUrl} />
+            {/* <img src={this.state.photoUrl} /> */}
+            {form}
           </div>
         </div>
         <div className='column-full'>

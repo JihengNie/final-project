@@ -199,6 +199,10 @@ input[type="submit"] {
   border: 2px solid red;
 }
 
+.comment-form-style {
+  width: 100%;
+}
+
 @media screen and (max-width: 768px) {
   .none-focus-cards {
     filter: opacity(25%);
