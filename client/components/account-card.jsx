@@ -94,7 +94,7 @@ export default class AccountCard extends React.Component {
 
   handleCheckClick() {
     const data = {
-      ratedWho: this.props.accountId,
+      ratedWho: this.state.accountId,
       rating: (this.state.ratingValue / 2)
     };
     const requestObj = {
@@ -103,7 +103,6 @@ export default class AccountCard extends React.Component {
       body: JSON.stringify(data)
     };
     fetch('/api/uploads/ratings', requestObj)
-      .then(result => result.json())
       .then(result => {
         this.setState({
           ratingValue: 0,
