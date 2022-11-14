@@ -10,7 +10,6 @@ CREATE TABLE "public"."accounts" (
 	"accountId" serial NOT NULL,
 	"username" TEXT NOT NULL UNIQUE,
 	"photoUrl" TEXT NOT NULL,
-	"currentRating" DECIMAL NOT NULL,
 	CONSTRAINT "accounts_pk" PRIMARY KEY ("accountId")
 ) WITH (
   OIDS=FALSE
@@ -42,7 +41,7 @@ CREATE TABLE "public"."ratings" (
 	"ratingId" serial NOT NULL,
 	"whoRated" int NOT NULL,
 	"ratedWho" int NOT NULL,
-	"rating" int NOT NULL
+	"rating" DECIMAL NOT NULL
 ) WITH (
   OIDS=FALSE
 );

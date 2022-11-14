@@ -19,10 +19,13 @@ const db = new pg.Pool({
 
 app.use(express.json());
 
+// ---------------------------- GET REQUESTS ---------------------//
+
 app.get('/api/other-accounts/', (req, res, next) => {
   const sql = `
     select "username"
     from "accounts"
+    where "username" != 'Admin'
   `;
   db.query(sql)
     .then(result => res.json(result.rows))
@@ -31,9 +34,15 @@ app.get('/api/other-accounts/', (req, res, next) => {
 
 app.get('/api/accounts/:username', (req, res, next) => {
   const sql = `
-    select *
+    select "accountId",
+    "username",
+    "photoUrl",
+    round(avg("rating"), 2) as "currentRating"
     from "accounts"
+    left join "ratings"
+    ON "accountId" = "ratedWho"
     where "username" = $1
+    group by "accountId"
   `;
   const username = req.params.username;
   const params = [username];
@@ -50,6 +59,8 @@ app.get('/api/accounts/:username', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// ---------------------------- POST REQUESTS ---------------------//
+
 app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
   const { newUsername } = req.body;
   if (!newUsername) {
@@ -57,8 +68,8 @@ app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
   }
   const imgUrl = `/images/${req.file.filename}`;
   const sql = `
-  insert into "accounts" ("username", "photoUrl", "currentRating")
-  values ($1, $2, '5')
+  insert into "accounts" ("username", "photoUrl")
+  values ($1, $2)
   returning *
   `;
   const params = [newUsername, imgUrl];
@@ -68,6 +79,29 @@ app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+app.post('/api/uploads/ratings', (req, res, next) => {
+  let { ratedWho, rating } = req.body;
+  rating = Number(rating);
+  if (!ratedWho) {
+    throw new ClientError(400, 'Who is being rated and rating are required fields');
+  } else if (rating < 0 || rating > 10) {
+    throw new ClientError(400, 'Rating is outside of range');
+  }
+  const sql = `
+    insert into "ratings" ("whoRated", "ratedWho", "rating")
+    values (1, $1, $2)
+    ;
+  `;
+  const params = [ratedWho, rating];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
+// ---------------------------- END REQUESTS ---------------------//
 
 app.use(errorMiddleware);
 
