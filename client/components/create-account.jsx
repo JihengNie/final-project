@@ -5,7 +5,8 @@ export default class CreateAccount extends React.Component {
     super(props);
     this.state = {
       imgSrc: null,
-      username: null
+      username: null,
+      accountId: null
     };
     this.fileInputRef = React.createRef();
     this.handleUpload = this.handleUpload.bind(this);
@@ -23,14 +24,30 @@ export default class CreateAccount extends React.Component {
   }
 
   addingInitialRating() {
-    const form2 = new FormData();
-    form2.append('ratedWho', this.state.username);
-    const requestObj2 = {
-      method: 'POST',
-      body: form2
+    const username = this.state.username;
+    const requestObj = {
+      method: 'GET'
     };
-    fetch('/api/uploads/ratings/sign-up', requestObj2)
+    fetch(`/api/accounts/${this.state.username}`, requestObj)
       .then(result => result.json())
+      .then(result => {
+        this.setState({
+          accountId: result.accountId
+        });
+        const data = {
+          ratedWho: result.accountId,
+          rating: 5
+        };
+        const requestObj2 = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        };
+        fetch('/api/uploads/ratings', requestObj2)
+          .catch(err => console.error(err));
+        window.localStorage.setItem('username', username);
+        window.location.hash = `#view-account?username=${username}`;
+      })
       .catch(err => console.error(err));
   }
 
@@ -52,8 +69,6 @@ export default class CreateAccount extends React.Component {
         });
         this.addingInitialRating();
         this.fileInputRef.current.value = null;
-        window.localStorage.setItem('username', this.state.username);
-        window.location.hash = `#view-account?username=${this.state.username}`;
       })
       .catch(err => console.error(err));
     this.setState({ imgSrc: null });

@@ -59,8 +59,6 @@ app.get('/api/accounts/:username', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// ---------------------------- PUT (UPDATE) REQUESTS ---------------------//
-
 // ---------------------------- POST REQUESTS ---------------------//
 
 app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
@@ -75,30 +73,6 @@ app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
   returning *
   `;
   const params = [newUsername, imgUrl];
-  db.query(sql, params)
-    .then(result => {
-      res.json(result.rows[0]);
-    })
-    .catch(err => next(err));
-});
-
-app.post('/api/uploads/ratings/sign-up', uploadsMiddleware, (req, res, next) => {
-  const { ratedWho } = req.body;
-  if (!ratedWho) {
-    throw new ClientError(400, 'Who is being rated is a required field');
-  }
-  const sql = `
-    insert into "ratings" ("whoRated", "ratedWho", "rating")
-
-    SELECT 1 as "whoRated", "ratedWho", 5 as "rating"
-    from
-    (SELECT "username",
-      "accountId" as "ratedWho"
-    from "accounts"
-    where "username" = $1) as "a"
-    returning *;
-  `;
-  const params = [ratedWho];
   db.query(sql, params)
     .then(result => {
       res.json(result.rows[0]);

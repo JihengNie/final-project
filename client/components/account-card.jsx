@@ -217,7 +217,8 @@ export default class AccountCard extends React.Component {
           this.setState({
             currentRating: result.currentRating,
             photoUrl: result.photoUrl,
-            happyLevel: this.createHappyLevel(result.currentRating)
+            happyLevel: this.createHappyLevel(result.currentRating),
+            accountId: result.accountId
           });
         })
         .catch(err => console.error(err));
