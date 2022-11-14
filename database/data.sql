@@ -1,9 +1,9 @@
-insert into "accounts" ("username", "photoUrl", "currentRating")
-values ('Admin', '/images/Blue.png', 5),
-('Jane Smith', '/images/example.jpg', 5),
-('Hippo Smith', '/images/example1.png', 5),
-('Bro Smith', '/images/example2.jpg', 5 ),
-('Foo Smith', '/images/example3.png', 5);
+insert into "accounts" ("username", "photoUrl")
+values ('Admin', '/images/Blue.png'),
+('Jane Smith', '/images/example.jpg'),
+('Hippo Smith', '/images/example1.png'),
+('Bro Smith', '/images/example2.jpg' ),
+('Foo Smith', '/images/example3.png');
 
 insert into "ratings" ("whoRated", "ratedWho", "rating")
 values (1, 2, 5),

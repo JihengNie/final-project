@@ -10,7 +10,6 @@ CREATE TABLE "public"."accounts" (
 	"accountId" serial NOT NULL,
 	"username" TEXT NOT NULL UNIQUE,
 	"photoUrl" TEXT NOT NULL,
-	"currentRating" DECIMAL NOT NULL,
 	CONSTRAINT "accounts_pk" PRIMARY KEY ("accountId")
 ) WITH (
   OIDS=FALSE

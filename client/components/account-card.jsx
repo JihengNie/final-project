@@ -13,6 +13,7 @@ export default class AccountCard extends React.Component {
       ratingClicked: false,
       userLoggedIn: window.localStorage.getItem('username'),
       currentUsername: this.props.username,
+      accountId: null,
       toggleStarSystem: false
     };
     this.displayingStars = this.displayingStars.bind(this);
@@ -92,13 +93,14 @@ export default class AccountCard extends React.Component {
   }
 
   handleCheckClick() {
-    const form = new FormData();
-    form.append('whoRated', this.state.userLoggedIn);
-    form.append('ratedWho', this.props.username);
-    form.append('rating', this.state.ratingValue / 2);
+    const data = {
+      ratedWho: this.props.accountId,
+      rating: (this.state.ratingValue / 2)
+    };
     const requestObj = {
       method: 'POST',
-      body: form
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     };
     fetch('/api/uploads/ratings', requestObj)
       .then(result => result.json())
@@ -107,25 +109,17 @@ export default class AccountCard extends React.Component {
           ratingValue: 0,
           ratingClicked: false
         });
-
-        const requestObj3 = {
+        const requestObj = {
           method: 'GET'
         };
-        fetch(`/api/accounts/new-ratings/${this.props.username}`, requestObj3)
+        fetch(`/api/accounts/${this.props.username}`, requestObj)
           .then(result => result.json())
           .then(result => {
-            if (result.updatedRating) {
-              this.setState({
-                currentRating: result.updatedRating
-              });
-              const requestObj2 = {
-                method: 'PUT'
-              };
-              fetch(`/api/accounts/new-rating/${this.props.username}&${result.updatedRating}`, requestObj2)
-                .then(result => result.json())
-                // .then(result => { })
-                .catch(err => console.error(err));
-            }
+            this.setState({
+              currentRating: result.currentRating,
+              photoUrl: result.photoUrl,
+              happyLevel: this.createHappyLevel(result.currentRating)
+            });
           })
           .catch(err => console.error(err));
       })
@@ -206,7 +200,8 @@ export default class AccountCard extends React.Component {
         this.setState({
           currentRating: result.currentRating,
           photoUrl: result.photoUrl,
-          happyLevel: this.createHappyLevel(result.currentRating)
+          happyLevel: this.createHappyLevel(result.currentRating),
+          accountId: result.accountId
         });
       })
       .catch(err => console.error(err));
