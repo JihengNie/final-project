@@ -12,6 +12,22 @@ export default class ViewAccount extends React.Component {
     this.displayingPage = this.displayingPage.bind(this);
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.username !== prevProps.username) {
+      const requestObj = {
+        method: 'GET'
+      };
+      fetch(`/api/accounts/${this.props.username}`, requestObj)
+        .then(result => result.json())
+        .then(result => {
+          this.setState({
+            currentRating: result.currentRating
+          });
+        })
+        .catch(err => console.error(err));
+    }
+  }
+
   componentDidMount() {
     const requestObj = {
       method: 'GET'

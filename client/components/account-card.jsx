@@ -1,5 +1,6 @@
 import React from 'react';
 import Smiley from './smiley';
+import parseRoute from './../lib/parseRoute';
 
 export default class AccountCard extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ export default class AccountCard extends React.Component {
       userLoggedInId: null,
       accountId: null,
       newComment: null,
+      route: parseRoute(window.location.hash),
       toggleCommentBox: false
     };
     this.displayingStars = this.displayingStars.bind(this);
@@ -265,7 +267,11 @@ export default class AccountCard extends React.Component {
     if (this.props.hideName) {
       return;
     }
-    return <h1 className='view-profile-name'>{this.props.username}</h1>;
+    if (this.state.route.path === 'view-other-accounts') {
+      return <a href={`#view-account?username=${this.props.username}`} className='view-profile-name'>{this.props.username}</a>;
+    } else {
+      return <h1 href={`#view-account?username=${this.props.username}`} className='view-profile-name'>{this.props.username}</h1>;
+    }
   }
 
   componentDidMount() {
