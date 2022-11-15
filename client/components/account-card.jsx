@@ -12,21 +12,25 @@ export default class AccountCard extends React.Component {
       ratingUsername: this.props.username,
       ratingClicked: false,
       userLoggedIn: window.localStorage.getItem('username'),
-      currentUsername: this.props.username,
+      userLoggedInId: null,
       accountId: null,
-      toggleStarSystem: false
+      newComment: null,
+      toggleCommentBox: false
     };
     this.displayingStars = this.displayingStars.bind(this);
     this.moodStar = this.moodStar.bind(this);
     this.smileyFaceColor = this.smileyFaceColor.bind(this);
     this.displayingName = this.displayingName.bind(this);
     this.displayingRating = this.displayingRating.bind(this);
-    this.createHappyLevel = this.createHappyLevel.bind(this);
     this.displayingNewRating = this.displayingNewRating.bind(this);
+    this.displayingCommentAndRating = this.displayingCommentAndRating.bind(this);
+    this.createHappyLevel = this.createHappyLevel.bind(this);
     this.handleStarHover = this.handleStarHover.bind(this);
     this.handleStarClick = this.handleStarClick.bind(this);
     this.handleCheckClick = this.handleCheckClick.bind(this);
     this.handleXClick = this.handleXClick.bind(this);
+    this.handleCommentClick = this.handleCommentClick.bind(this);
+    this.handleCommentChange = this.handleCommentChange.bind(this);
   }
 
   smileyFaceColor(state) {
@@ -81,21 +85,80 @@ export default class AccountCard extends React.Component {
     );
   }
 
+  displayingCommentAndRating() {
+    const currentFiveStarRating = (
+      <div className='flex-center fa-star-holder'>
+        {this.displayingStars(this.state.happyLevel, this.state.currentRating)}
+      </div>
+    );
+    const newFiveStarRating = (
+      <div className='flex-center-column'>
+        {this.displayingNewRating()}
+      </div>
+    );
+
+    const form = (
+      <div className='column-full image-upload-holder flex-center'>
+        <div className='comment-style '>
+          <textarea onChange={this.handleCommentChange} className='comment-input-style'
+                type='textarea'
+                name="comment"
+                autoComplete='off'
+                autoFocus
+                placeholder="Leave a comment" />
+          <div className='column-full'>
+            {newFiveStarRating}
+          </div>
+        </div>
+      </div>
+    );
+
+    if (this.props.hideComment) {
+      return <img src={this.state.photoUrl} />;
+    }
+
+    const img = (
+      <>
+        <div className='column-full image-upload-holder flex-center'>
+          <img src={this.state.photoUrl} />
+        </div>
+        <div className='column-full'>
+          {currentFiveStarRating}
+        </div>
+      </>
+    );
+
+    return this.state.toggleCommentBox ? form : img;
+  }
+
   displayingRating() {
     if (this.props.hideRating) {
       return;
     }
-    return <h1> {this.state.currentRating}</h1>;
+    return <h1> {this.state.currentRating}
+      <i onClick={this.handleCommentClick} className="fa-solid fa-comment fa-comment-style" />
+    </h1>;
+  }
+
+  handleCommentChange(event) {
+    this.setState({ newComment: event.target.value });
+  }
+
+  handleCommentClick() {
+    this.setState({ toggleCommentBox: !this.state.toggleCommentBox });
   }
 
   handleXClick() {
-    this.setState({ toggleStarSystem: true });
+    this.setState({ toggleCommentBox: false });
   }
 
   handleCheckClick() {
     const data = {
       ratedWho: this.state.accountId,
-      rating: (this.state.ratingValue / 2)
+      rating: (this.state.ratingValue / 2),
+      comment: this.state.newComment,
+      whoComment: this.state.userLoggedInId,
+      commentWho: this.state.accountId
     };
     const requestObj = {
       method: 'POST',
@@ -123,7 +186,23 @@ export default class AccountCard extends React.Component {
           .catch(err => console.error(err));
       })
       .catch(err => console.error(err));
-    this.setState({ toggleStarSystem: true });
+
+    const requestObj2 = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    };
+
+    fetch('/api/uploads/comments', requestObj2)
+      .then(result => result.json())
+      .then(result => {
+        this.setState({
+          toggleCommentBox: false,
+          newComment: null
+        });
+
+      })
+      .catch(err => console.error(err));
   }
 
   handleStarClick(event) {
@@ -144,7 +223,7 @@ export default class AccountCard extends React.Component {
   }
 
   displayingNewRating() {
-    if (this.props.hideNewRating || this.state.toggleStarSystem) {
+    if (this.props.hideNewRating) {
       return;
     }
     const fiveStarsArray = [];
@@ -204,6 +283,14 @@ export default class AccountCard extends React.Component {
         });
       })
       .catch(err => console.error(err));
+    fetch(`/api/accounts/${this.state.userLoggedIn}`, requestObj)
+      .then(result => result.json())
+      .then(result => {
+        this.setState({
+          userLoggedInId: result.accountId
+        });
+      })
+      .catch(err => console.error(err));
   }
 
   componentDidUpdate(prevProps) {
@@ -223,50 +310,25 @@ export default class AccountCard extends React.Component {
         })
         .catch(err => console.error(err));
       this.setState({
-        toggleStarSystem: false,
         ratingValue: 0
       });
     }
   }
 
   render() {
-    const currentFiveStarRating = (
-      <div className='flex-center fa-star-holder'>
-        {this.displayingStars(this.state.happyLevel, this.state.currentRating)}
-      </div>
-    );
-    const newFiveStarRating = (
-      <div className='flex-center-column'>
-        {this.displayingNewRating()}
-      </div>
-    );
-
-    const form = (
-      <form className='comment-form-style'>
-        <label>
-          <input type='textarea' name="comment" autoComplete ='off' placeholder="Leave a comment"/>
-        </label>
-      </form>
-    );
-
     return (
       <div className='row max-width-500px '>
         <div className='column-full flex-center'>
           {this.displayingName()}
         </div>
         <div className='column-full user-rating-style'>
-          {this.displayingRating()}
-        </div>
-        <div className='column-full'>
-          <div className='column-full image-upload-holder flex-center'>
-            {/* <img src={this.state.photoUrl} /> */}
-            {form}
+          <div className='row flex-center'>
+            <div className='column-full user-rating-text-style'>
+              {this.displayingRating()}
+            </div>
           </div>
         </div>
-        <div className='column-full'>
-          {this.state.toggleStarSystem ? currentFiveStarRating : newFiveStarRating}
-          {this.props.displayCurrentUserRating ? currentFiveStarRating : null}
-        </div>
+        {this.displayingCommentAndRating()}
       </div>
     );
   }

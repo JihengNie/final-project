@@ -20,6 +20,11 @@ input[type="submit"] {
   flex-direction: column;
 }
 
+.fa-comment-style {
+  margin-left: 5.5rem;
+  cursor: pointer;
+}
+
 .fa-face-smile-style {
   color: #34a604;
   margin: 1.5rem 0;
@@ -82,11 +87,11 @@ input[type="submit"] {
 .image-upload-holder {
   background-color: #2a2d41;
   padding: 0;
-  margin: auto;
-  margin-top: 1rem;
+  margin: 0 auto;
   border-radius: 8px;
   width: 16rem;
   height: 20rem;
+  justify-content: center;
 }
 
 .image-upload-holder img {
@@ -148,16 +153,18 @@ input[type="submit"] {
 }
 
 .chevron-style {
+  position: relative;
+  top: 12.5rem;
   color: #615c5e;
-  margin: auto;
   padding: auto;
   font-size: 3rem;
   cursor: pointer;
 }
 
 .none-focus-cards {
+  position: relative;
+  top: 4.5em;
   filter: opacity(25%);
-  margin-top: 4.5rem;
 }
 
 .left {
@@ -180,10 +187,13 @@ input[type="submit"] {
   text-align: start;
 }
 
-.user-rating-style h1 {
+.user-rating-text-style {
   margin: 0;
   text-align: center;
-  padding-right: 10rem;
+}
+
+.user-rating-text-style h1 {
+  margin: 0;
 }
 
 .rating-stars {
@@ -199,14 +209,23 @@ input[type="submit"] {
   border: 2px solid red;
 }
 
-.comment-form-style {
+.comment-style {
   width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.comment-input-style {
+  height: 100%;
+  width: 100%;
+  padding: 4%;
+  border: none;
+  border-radius: 8px;
+  background-color: #d9d9d9;
 }
 
 @media screen and (max-width: 768px) {
   .none-focus-cards {
-    filter: opacity(25%);
-    margin-top: 3rem;
     display: none;
   }
 
