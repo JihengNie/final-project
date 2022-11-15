@@ -36,7 +36,8 @@ export default class CreateAccount extends React.Component {
         });
         const data = {
           ratedWho: result.accountId,
-          rating: 5
+          rating: 5,
+          whoRated: 1
         };
         const requestObj2 = {
           method: 'POST',

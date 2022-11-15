@@ -154,6 +154,7 @@ export default class AccountCard extends React.Component {
 
   handleCheckClick() {
     const data = {
+      whoRated: this.state.userLoggedInId,
       ratedWho: this.state.accountId,
       rating: (this.state.ratingValue / 2),
       comment: this.state.newComment,

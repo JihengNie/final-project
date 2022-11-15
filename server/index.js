@@ -83,7 +83,7 @@ app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
 app.post('/api/uploads/comments', (req, res, next) => {
   const { whoComment, commentWho, comment } = req.body;
   if (!comment) {
-    throw new ClientError(400, 'Comment is a required field');
+    res.json({ error: 'Comment is empty' });
   }
   const sql = `
     insert into "comments" ("whoComment", "commentWho", "comment")
@@ -99,7 +99,7 @@ app.post('/api/uploads/comments', (req, res, next) => {
 });
 
 app.post('/api/uploads/ratings', (req, res, next) => {
-  let { ratedWho, rating } = req.body;
+  let { whoRated, ratedWho, rating } = req.body;
   rating = Number(rating);
   if (!ratedWho) {
     throw new ClientError(400, 'Who is being rated and rating are required fields');
@@ -108,11 +108,11 @@ app.post('/api/uploads/ratings', (req, res, next) => {
   }
   const sql = `
     insert into "ratings" ("whoRated", "ratedWho", "rating")
-    values (1, $1, $2)
+    values ($1, $2, $3)
     returning *
     ;
   `;
-  const params = [ratedWho, rating];
+  const params = [whoRated, ratedWho, rating];
   db.query(sql, params)
     .then(result => {
       res.json(result.rows[0]);
