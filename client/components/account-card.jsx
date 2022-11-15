@@ -33,7 +33,6 @@ export default class AccountCard extends React.Component {
     this.handleXClick = this.handleXClick.bind(this);
     this.handleCommentClick = this.handleCommentClick.bind(this);
     this.handleCommentChange = this.handleCommentChange.bind(this);
-    this.handleUsernameClick = this.handleUsernameClick.bind(this);
   }
 
   smileyFaceColor(state) {
@@ -140,12 +139,6 @@ export default class AccountCard extends React.Component {
     return <h1> {this.state.currentRating}
       <i onClick={this.handleCommentClick} className="fa-solid fa-comment fa-comment-style" />
     </h1>;
-  }
-
-  handleUsernameClick(event) {
-    if (this.state.route.path === 'view-other-accounts') {
-      window.location.hash = `#user-account?username=${event.target.textContent}`;
-    }
   }
 
   handleCommentChange(event) {
@@ -275,9 +268,9 @@ export default class AccountCard extends React.Component {
       return;
     }
     if (this.state.route.path === 'view-other-accounts') {
-      return <h1 onClick={this.handleUsernameClick} className='view-profile-name other-profiles'>{this.props.username}</h1>;
+      return <a href={`#view-account?username=${this.props.username}`} className='view-profile-name'>{this.props.username}</a>;
     } else {
-      return <h1 onClick={this.handleUsernameClick} className='view-profile-name'>{this.props.username}</h1>;
+      return <h1 href={`#view-account?username=${this.props.username}`} className='view-profile-name'>{this.props.username}</h1>;
     }
   }
 

@@ -111,11 +111,8 @@ input[type="submit"] {
   margin: 0;
   padding: 0;
   max-width: 30rem;
+  text-decoration: none;
   word-break: break-word;
-}
-
-.other-profiles {
-  cursor: pointer;
 }
 
 .fa-star-holder {

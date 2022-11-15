@@ -28,9 +28,6 @@ export default class App extends React.Component {
   renderPage() {
     if (this.state.route.path === 'create-account') {
       return <CreateAccount/>;
-    } else if (this.state.route.path === 'user-account') {
-      const accountUsername = this.state.route.params.get('username');
-      return <ViewAccount username={accountUsername} />;
     } else if (this.state.route.path === 'view-other-accounts') {
       return <ViewOtherAccount />;
     } else if (this.state.route.path === 'view-account') {
