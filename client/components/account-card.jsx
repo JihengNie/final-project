@@ -105,10 +105,10 @@ export default class AccountCard extends React.Component {
     }
 
     if (this.state.route.path === 'view-account' && this.state.toggleCommentBox) {
-      const commentsInArray = this.state.comment.map(items => {
+      const commentsInArray = this.state.comment.map((items, index) => {
         return (
           <CreateComment
-          key={this.state.comment.indexOf(items)}
+          key={index}
           photoUrl={items.photoUrl}
           comment={items.comment} />
         );
