@@ -226,6 +226,32 @@ input[type="submit"] {
   background-color: #d9d9d9;
 }
 
+.comment-card-holder {
+  background-color: #d9d9d9;
+  padding: 1rem 1.25rem;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+.comment-image-holder {
+  object-fit: fill;
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.comment-image-holder > img {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+  border: 1px solid #353650;
+}
+
+.comment-text-style {
+  color: #707981;
+  padding-top: 0.25rem;
+  margin-left: 0.5rem;
+}
+
 @media screen and (max-width: 768px) {
   .none-focus-cards {
     display: none;

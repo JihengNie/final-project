@@ -1,6 +1,7 @@
 import React from 'react';
 import Smiley from './smiley';
 import parseRoute from './../lib/parseRoute';
+import CreateComment from './comment-card';
 
 export default class AccountCard extends React.Component {
   constructor(props) {
@@ -17,7 +18,8 @@ export default class AccountCard extends React.Component {
       accountId: null,
       newComment: null,
       route: parseRoute(window.location.hash),
-      toggleCommentBox: false
+      toggleCommentBox: false,
+      comment: null
     };
     this.displayingStars = this.displayingStars.bind(this);
     this.moodStar = this.moodStar.bind(this);
@@ -100,6 +102,22 @@ export default class AccountCard extends React.Component {
     );
     if (this.props.hideComment) {
       return <img src={this.state.photoUrl} />;
+    }
+
+    if (this.state.route.path === 'view-account' && this.state.toggleCommentBox) {
+      const commentsInArray = this.state.comment.map(items => {
+        return (
+          <CreateComment
+          key={this.state.comment.indexOf(items)}
+          photoUrl={items.photoUrl}
+          comment={items.comment} />
+        );
+      });
+      return (
+        <div className='column-full image-upload-holder comment-card-holder'>
+          {commentsInArray}
+        </div>
+      );
     }
 
     if (this.state.toggleCommentBox) {
@@ -289,11 +307,21 @@ export default class AccountCard extends React.Component {
         });
       })
       .catch(err => console.error(err));
+
     fetch(`/api/accounts/${this.state.userLoggedIn}`, requestObj)
       .then(result => result.json())
       .then(result => {
         this.setState({
           userLoggedInId: result.accountId
+        });
+      })
+      .catch(err => console.error(err));
+
+    fetch(`/api/comments/${this.props.username}`, requestObj)
+      .then(result => result.json())
+      .then(result => {
+        this.setState({
+          comment: result
         });
       })
       .catch(err => console.error(err));
@@ -318,6 +346,15 @@ export default class AccountCard extends React.Component {
       this.setState({
         ratingValue: 0
       });
+      fetch(`/api/comments/${this.props.username}`, requestObj)
+        .then(result => result.json())
+        .then(result => {
+          this.setState({
+            comment: result
+          });
+        })
+        .catch(err => console.error(err));
+      this.setState({ toggleCommentBox: false });
     }
   }
 
