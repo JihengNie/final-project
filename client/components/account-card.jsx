@@ -21,14 +21,14 @@ export default class AccountCard extends React.Component {
       toggleCommentBox: false,
       comment: null
     };
-    this.displayingStars = this.displayingStars.bind(this);
     this.moodStar = this.moodStar.bind(this);
     this.smileyFaceColor = this.smileyFaceColor.bind(this);
+    this.createHappyLevel = this.createHappyLevel.bind(this);
+    this.displayingStars = this.displayingStars.bind(this);
     this.displayingName = this.displayingName.bind(this);
     this.displayingRating = this.displayingRating.bind(this);
     this.displayingNewRating = this.displayingNewRating.bind(this);
     this.displayingCommentAndRating = this.displayingCommentAndRating.bind(this);
-    this.createHappyLevel = this.createHappyLevel.bind(this);
     this.handleStarHover = this.handleStarHover.bind(this);
     this.handleStarClick = this.handleStarClick.bind(this);
     this.handleCheckClick = this.handleCheckClick.bind(this);
@@ -66,6 +66,8 @@ export default class AccountCard extends React.Component {
     const starArray = [neturalStar, fullStar, halfStar];
     return starArray;
   }
+
+  // ------------------- Displaying functions  ---------------------------//
 
   displayingStars(happyLevel, rating) {
     if (this.props.hideStars) {
@@ -108,9 +110,9 @@ export default class AccountCard extends React.Component {
       const commentsInArray = this.state.comment.map((items, index) => {
         return (
           <CreateComment
-          key={index}
-          photoUrl={items.photoUrl}
-          comment={items.comment} />
+            key={index}
+            photoUrl={items.photoUrl}
+            comment={items.comment} />
         );
       });
       return (
@@ -158,6 +160,58 @@ export default class AccountCard extends React.Component {
       <i onClick={this.handleCommentClick} className="fa-solid fa-comment fa-comment-style" />
     </h1>;
   }
+
+  displayingNewRating() {
+    if (this.props.hideNewRating) {
+      return;
+    }
+    const fiveStarsArray = [];
+    for (let i = 1; i < 10; i = i + 2) {
+      fiveStarsArray.push(
+        <div className="star-div">
+          <span className={`half-star ${this.state.ratingValue < i ? 'netural' : 'happy'}`}>
+            <label onMouseEnter={this.handleStarHover} id={i} htmlFor={`rating${i}`}>
+              <i className="fa-solid fa-star fa-star-style rating-stars" />
+            </label>
+          </span>
+          <span>
+            <label id={i + 1} htmlFor={`rating${i + 1}`}>
+              <i onMouseEnter={this.handleStarHover} id={i + 1}
+                className={`fa-solid fa-star fa-star-style rating-stars
+                ${this.state.ratingValue < i + 1 ? 'netural' : 'happy'}`} />
+            </label>
+          </span>
+        </div>
+      );
+    }
+    const fiveStars = <> {fiveStarsArray[0]} {fiveStarsArray[1]} {fiveStarsArray[2]} {fiveStarsArray[3]} {fiveStarsArray[4]} </>;
+    return (
+      <>
+        <div className='column-full'>
+          <div onClick={this.handleStarClick} className='fa-star-holder flex-center'>
+            {fiveStars}
+          </div>
+        </div>
+        <div className='fa-check-holder flex-center'>
+          <i onClick={this.handleXClick} className="fa-solid fa-2x fa-x fa-check-style rating-buttons-x-style" />
+          <i onClick={this.handleCheckClick} className="fa-solid fa-2x fa-check fa-check-style" />
+        </div>
+      </>
+    );
+  }
+
+  displayingName() {
+    if (this.props.hideName) {
+      return;
+    }
+    if (this.state.route.path === 'view-other-accounts') {
+      return <a href={`#view-account?username=${this.props.username}`} className='view-profile-name'>{this.props.username}</a>;
+    } else {
+      return <h1 href={`#view-account?username=${this.props.username}`} className='view-profile-name'>{this.props.username}</h1>;
+    }
+  }
+
+  // ------------------- Handle event functions  ---------------------------//
 
   handleCommentChange(event) {
     this.setState({ newComment: event.target.value });
@@ -242,55 +296,7 @@ export default class AccountCard extends React.Component {
     }
   }
 
-  displayingNewRating() {
-    if (this.props.hideNewRating) {
-      return;
-    }
-    const fiveStarsArray = [];
-    for (let i = 1; i < 10; i = i + 2) {
-      fiveStarsArray.push(
-        <div className="star-div">
-          <span className={`half-star ${this.state.ratingValue < i ? 'netural' : 'happy'}`}>
-            <label onMouseEnter={this.handleStarHover} id={i} htmlFor={`rating${i}`}>
-              <i className="fa-solid fa-star fa-star-style rating-stars"/>
-            </label>
-          </span>
-          <span>
-            <label id={i + 1} htmlFor={`rating${i + 1}`}>
-              <i onMouseEnter={this.handleStarHover} id={i + 1}
-                className={`fa-solid fa-star fa-star-style rating-stars
-                ${this.state.ratingValue < i + 1 ? 'netural' : 'happy'}`} />
-            </label>
-          </span>
-        </div>
-      );
-    }
-    const fiveStars = <> {fiveStarsArray[0]} {fiveStarsArray[1]} {fiveStarsArray[2]} {fiveStarsArray[3]} {fiveStarsArray[4]} </>;
-    return (
-      <>
-        <div className='column-full'>
-          <div onClick={this.handleStarClick} className='fa-star-holder flex-center'>
-            {fiveStars}
-          </div>
-        </div>
-        <div className='fa-check-holder flex-center'>
-          <i onClick={this.handleXClick} className="fa-solid fa-2x fa-x fa-check-style rating-buttons-x-style" />
-          <i onClick={this.handleCheckClick} className="fa-solid fa-2x fa-check fa-check-style" />
-        </div>
-      </>
-    );
-  }
-
-  displayingName() {
-    if (this.props.hideName) {
-      return;
-    }
-    if (this.state.route.path === 'view-other-accounts') {
-      return <a href={`#view-account?username=${this.props.username}`} className='view-profile-name'>{this.props.username}</a>;
-    } else {
-      return <h1 href={`#view-account?username=${this.props.username}`} className='view-profile-name'>{this.props.username}</h1>;
-    }
-  }
+  // ------------------- Lifecycle functions  ---------------------------//
 
   componentDidMount() {
     const requestObj = {
