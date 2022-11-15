@@ -21,6 +21,39 @@ app.use(express.json());
 
 // ---------------------------- GET REQUESTS ---------------------//
 
+app.get('/api/comments/:username', (req, res, next) => {
+  const sql = `
+    SELECT "comment",
+    "whoComment",
+    "photoUrl"
+    FROM
+      (SELECT "comment",
+        "whoComment"
+        FROM "comments"
+        LEFT JOIN "accounts"
+        ON "accountId" = "commentWho"
+        where "username" = $1) as "a"
+    LEFT JOIN
+      "accounts" as "b"
+    ON "a"."whoComment" = "b"."accountId";
+  `;
+  const username = req.params.username;
+  const params = [username];
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows[0]) {
+        res.json([{
+          whoComment: 1,
+          photoUrl: '/images/Blue.png',
+          comment: 'No one has left you a comment'
+        }]);
+      } else {
+        res.json(result.rows);
+      }
+    })
+    .catch(err => next(err));
+});
+
 app.get('/api/other-accounts/', (req, res, next) => {
   const sql = `
     select "username"
