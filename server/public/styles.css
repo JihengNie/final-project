@@ -114,6 +114,10 @@ input[type="submit"] {
   word-break: break-word;
 }
 
+.other-profiles {
+  cursor: pointer;
+}
+
 .fa-star-holder {
   font-size: 2.5rem;
   margin-top: 1.5rem;

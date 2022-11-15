@@ -1,5 +1,6 @@
 import React from 'react';
 import Smiley from './smiley';
+import parseRoute from './../lib/parseRoute';
 
 export default class AccountCard extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ export default class AccountCard extends React.Component {
       userLoggedInId: null,
       accountId: null,
       newComment: null,
+      route: parseRoute(window.location.hash),
       toggleCommentBox: false
     };
     this.displayingStars = this.displayingStars.bind(this);
@@ -31,6 +33,7 @@ export default class AccountCard extends React.Component {
     this.handleXClick = this.handleXClick.bind(this);
     this.handleCommentClick = this.handleCommentClick.bind(this);
     this.handleCommentChange = this.handleCommentChange.bind(this);
+    this.handleUsernameClick = this.handleUsernameClick.bind(this);
   }
 
   smileyFaceColor(state) {
@@ -137,6 +140,12 @@ export default class AccountCard extends React.Component {
     return <h1> {this.state.currentRating}
       <i onClick={this.handleCommentClick} className="fa-solid fa-comment fa-comment-style" />
     </h1>;
+  }
+
+  handleUsernameClick(event) {
+    if (this.state.route.path === 'view-other-accounts') {
+      window.location.hash = `#user-account?username=${event.target.textContent}`;
+    }
   }
 
   handleCommentChange(event) {
@@ -265,7 +274,11 @@ export default class AccountCard extends React.Component {
     if (this.props.hideName) {
       return;
     }
-    return <h1 className='view-profile-name'>{this.props.username}</h1>;
+    if (this.state.route.path === 'view-other-accounts') {
+      return <h1 onClick={this.handleUsernameClick} className='view-profile-name other-profiles'>{this.props.username}</h1>;
+    } else {
+      return <h1 onClick={this.handleUsernameClick} className='view-profile-name'>{this.props.username}</h1>;
+    }
   }
 
   componentDidMount() {
