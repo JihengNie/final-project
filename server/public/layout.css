@@ -7,6 +7,10 @@
   width: calc(100%/3);
 }
 
+.column-half-always {
+  width: 50%;
+}
+
 .row {
   display: flex;
   flex-wrap: wrap;
