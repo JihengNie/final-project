@@ -7,7 +7,6 @@ export default class Smiley extends React.Component {
       username: window.localStorage.getItem('username')
     };
     this.createHappyLevel = this.createHappyLevel.bind(this);
-    this.handleLoad = this.handleLoad.bind(this);
   }
 
   createHappyLevel(rating) {
@@ -19,14 +18,6 @@ export default class Smiley extends React.Component {
     } else {
       return 'angry';
     }
-  }
-
-  handleLoad(event) {
-
-  }
-
-  componentDidMount() {
-    window.addEventListener('load', this.handleLoad);
   }
 
   render() {

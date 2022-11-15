@@ -8,19 +8,11 @@ export default class CreateAccount extends React.Component {
       username: null,
       accountId: null
     };
+    this.addingInitialRating = this.addingInitialRating.bind(this);
     this.fileInputRef = React.createRef();
     this.handleUpload = this.handleUpload.bind(this);
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.addingInitialRating = this.addingInitialRating.bind(this);
-  }
-
-  handleUpload(event) {
-    this.setState({ imgSrc: URL.createObjectURL(event.target.files[0]) });
-  }
-
-  handleUsernameChange(event) {
-    this.setState({ username: event.target.value });
   }
 
   addingInitialRating() {
@@ -50,6 +42,14 @@ export default class CreateAccount extends React.Component {
         window.location.hash = `#view-account?username=${username}`;
       })
       .catch(err => console.error(err));
+  }
+
+  handleUpload(event) {
+    this.setState({ imgSrc: URL.createObjectURL(event.target.files[0]) });
+  }
+
+  handleUsernameChange(event) {
+    this.setState({ username: event.target.value });
   }
 
   handleSubmit(event) {
