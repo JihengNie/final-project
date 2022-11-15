@@ -96,39 +96,38 @@ export default class AccountCard extends React.Component {
         {this.displayingNewRating()}
       </div>
     );
-
-    const form = (
-      <div className='column-full image-upload-holder flex-center'>
-        <div className='comment-style '>
-          <textarea onChange={this.handleCommentChange} className='comment-input-style'
-                type='textarea'
-                name="comment"
-                autoComplete='off'
-                autoFocus
-                placeholder="Leave a comment" />
-          <div className='column-full'>
-            {newFiveStarRating}
-          </div>
-        </div>
-      </div>
-    );
-
     if (this.props.hideComment) {
       return <img src={this.state.photoUrl} />;
     }
 
-    const img = (
-      <>
+    if (this.state.toggleCommentBox) {
+      return (
         <div className='column-full image-upload-holder flex-center'>
-          <img src={this.state.photoUrl} />
+          <div className='comment-style '>
+            <textarea onChange={this.handleCommentChange} className='comment-input-style'
+              type='textarea'
+              name="comment"
+              autoComplete='off'
+              autoFocus
+              placeholder="Leave a comment" />
+            <div className='column-full'>
+              {newFiveStarRating}
+            </div>
+          </div>
         </div>
-        <div className='column-full'>
-          {currentFiveStarRating}
-        </div>
-      </>
-    );
-
-    return this.state.toggleCommentBox ? form : img;
+      );
+    } else {
+      return (
+        <>
+          <div className='column-full image-upload-holder flex-center'>
+            <img src={this.state.photoUrl} />
+          </div>
+          <div className='column-full'>
+            {currentFiveStarRating}
+          </div>
+        </>
+      );
+    }
   }
 
   displayingRating() {

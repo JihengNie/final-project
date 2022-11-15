@@ -83,7 +83,7 @@ app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
 app.post('/api/uploads/comments', (req, res, next) => {
   const { whoComment, commentWho, comment } = req.body;
   if (!comment) {
-    res.json({ error: 'Comment is empty' });
+    throw new ClientError(400, 'Comment is empty');
   }
   const sql = `
     insert into "comments" ("whoComment", "commentWho", "comment")
