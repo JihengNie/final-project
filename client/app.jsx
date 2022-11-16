@@ -22,10 +22,6 @@ export default class App extends React.Component {
   }
 
   renderPage() {
-    if (!this.state.userLoggedIn) {
-      window.location.hash = '#sign-up';
-      return <CreateAccount />;
-    }
     if (this.state.route.path === 'sign-up') {
       return <CreateAccount/>;
     } else if (this.state.route.path === 'sign-in') {

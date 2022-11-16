@@ -36,6 +36,10 @@ export default class ViewOtherAccount extends React.Component {
   }
 
   componentDidMount() {
+    if (!this.state.userLoggedIn) {
+      window.location.hash = '#sign-up';
+      return null;
+    }
     const requestObj = {
       method: 'GET',
       headers: {
@@ -66,6 +70,10 @@ export default class ViewOtherAccount extends React.Component {
   }
 
   render() {
+    if (!this.state.userLoggedIn) {
+      window.location.hash = '#sign-up';
+      return null;
+    }
     const otherUsers = this.state.otherUsers;
     if (otherUsers) {
       const currentIndex = this.state.currentIndex;

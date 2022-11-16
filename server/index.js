@@ -37,9 +37,16 @@ app.post('/api/auth/sign-up', uploadsMiddleware, (req, res, next) => {
       values ($1, $2, $3)
       returning*;`;
       const values = [username, imgUrl, hashPassword];
-
       db.query(sql, values)
         .then(result => {
+          const sql = `
+              insert into "ratings" ("whoRated", "ratedWho", "rating")
+              values ('1', $1, '5')
+              returning *
+          `;
+          const params = [result.rows[0].accountId];
+          db.query(sql, params)
+            .catch(err => next(err));
           res.json(result.rows[0]);
         })
         .catch(err => next(err));

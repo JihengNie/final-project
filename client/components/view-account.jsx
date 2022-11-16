@@ -69,6 +69,10 @@ export default class ViewAccount extends React.Component {
   }
 
   render() {
+    if (!this.state.userLoggedIn) {
+      window.location.hash = '#sign-up';
+      return null;
+    }
     return (
       this.displayingPage()
     );

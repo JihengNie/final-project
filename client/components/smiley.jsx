@@ -20,7 +20,17 @@ export default class Smiley extends React.Component {
     }
   }
 
+  componentDidMount() {
+    if (!this.state.userLoggedIn) {
+      window.location.hash = '#sign-up';
+    }
+  }
+
   render() {
+    if (!this.state.userLoggedIn) {
+      window.location.hash = '#sign-up';
+      return null;
+    }
     const happyLevel = this.createHappyLevel(this.props.currentRating);
     return (
       <a href={`#view-account?username=${this.state.userLoggedIn.account.username}`}>

@@ -10,39 +10,11 @@ export default class CreateAccount extends React.Component {
       password: null,
       userLoggedIn: JSON.parse(window.localStorage.getItem('account'))
     };
-    this.addingInitialRating = this.addingInitialRating.bind(this);
     this.fileInputRef = React.createRef();
     this.handleUpload = this.handleUpload.bind(this);
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  addingInitialRating() {
-    const requestObj = {
-      method: 'GET'
-    };
-    fetch(`/api/accounts/${this.state.username}`, requestObj)
-      .then(result => result.json())
-      .then(result => {
-        this.setState({
-          accountId: result.accountId
-        });
-        const data = {
-          ratedWho: result.accountId,
-          rating: 5,
-          whoRated: 1
-        };
-        const requestObj2 = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        };
-        fetch('/api/uploads/ratings', requestObj2)
-          .catch(err => console.error(err));
-        window.location.hash = '#sign-in';
-      })
-      .catch(err => console.error(err));
   }
 
   handleUpload(event) {
@@ -75,8 +47,6 @@ export default class CreateAccount extends React.Component {
           username: '',
           password: ''
         });
-        this.addingInitialRating();
-        this.fileInputRef.current.value = null;
       })
       .catch(err => console.error(err));
     this.setState({ imgSrc: null });

@@ -311,6 +311,10 @@ export default class AccountCard extends React.Component {
   // ------------------- Lifecycle functions  ---------------------------//
 
   componentDidMount() {
+    if (!this.state.userLoggedIn) {
+      window.location.hash = '#sign-up';
+      return null;
+    }
     const requestObj = {
       method: 'GET',
       headers: {
@@ -378,6 +382,10 @@ export default class AccountCard extends React.Component {
   }
 
   render() {
+    if (!this.state.userLoggedIn) {
+      window.location.hash = '#sign-up';
+      return null;
+    }
     return (
       <div className='row max-width-500px '>
         <div className='column-full flex-center'>
