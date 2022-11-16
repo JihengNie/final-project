@@ -9,6 +9,7 @@ export default class ViewOtherAccount extends React.Component {
       username: null,
       otherUsers: null,
       currentRating: null,
+      userLoggedIn: JSON.parse(window.localStorage.getItem('account')),
       currentIndex: 1
     };
     this.handleDirectionClick = this.handleDirectionClick.bind(this);
@@ -35,15 +36,15 @@ export default class ViewOtherAccount extends React.Component {
   }
 
   componentDidMount() {
-    const previousUsername = window.localStorage.getItem('username');
-    if (previousUsername) {
-      this.setState({ username: previousUsername });
-    }
-
     const requestObj = {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        account: this.state.userLoggedIn.account,
+        token: this.state.userLoggedIn.token
+      }
     };
-    fetch(`/api/accounts/${previousUsername}`, requestObj)
+    fetch(`/api/accounts/${this.state.userLoggedIn.account.username}`, requestObj)
       .then(result => result.json())
       .then(result => {
         this.setState({
@@ -52,10 +53,7 @@ export default class ViewOtherAccount extends React.Component {
       })
       .catch(err => console.error(err));
 
-    const requestObj2 = {
-      method: 'GET'
-    };
-    fetch('/api/other-accounts/', requestObj2)
+    fetch('/api/other-accounts/', requestObj)
       .then(result => result.json())
       .then(result => {
         const otherUsers = result.map(item => item.username);

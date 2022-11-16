@@ -1,10 +1,13 @@
 require('dotenv/config');
 const pg = require('pg');
 const express = require('express');
+const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
 const ClientError = require('./client-error');
 const staticMiddleware = require('./static-middleware');
 const errorMiddleware = require('./error-middleware');
 const uploadsMiddleware = require('./uploads-middleware');
+const authorizationMiddleware = require('./authorization-middleware');
 
 const app = express();
 
@@ -18,6 +21,66 @@ const db = new pg.Pool({
 });
 
 app.use(express.json());
+
+// ---------------------------- Auth ---------------------//
+
+app.post('/api/auth/sign-up', uploadsMiddleware, (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    throw new ClientError(400, 'username and password are required fields');
+  }
+  argon2.hash(password)
+    .then(hashPassword => {
+      const imgUrl = `/images/${req.file.filename}`;
+      const sql = `
+      insert into "accounts" ("username", "photoUrl","hashedPassword")
+      values ($1, $2, $3)
+      returning*;`;
+      const values = [username, imgUrl, hashPassword];
+
+      db.query(sql, values)
+        .then(result => {
+          res.json(result.rows[0]);
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/auth/sign-in', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    throw new ClientError(401, 'invalid login');
+  }
+  const sql = `
+    select "accountId",
+           "hashedPassword"
+      from "accounts"
+     where "username" = $1
+  `;
+  const params = [username];
+  db.query(sql, params)
+    .then(result => {
+      const [account] = result.rows;
+      if (!account) {
+        throw new ClientError(401, 'invalid login');
+      }
+      const { accountId, hashedPassword } = account;
+      return argon2
+        .verify(hashedPassword, password)
+        .then(isMatching => {
+          if (!isMatching) {
+            throw new ClientError(401, 'invalid login');
+          }
+          const payload = { accountId, username };
+          const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+          res.json({ token, account: payload });
+        });
+    })
+    .catch(err => next(err));
+});
+
+app.use(authorizationMiddleware);
 
 // ---------------------------- GET REQUESTS ---------------------//
 

@@ -13,8 +13,7 @@ export default class AccountCard extends React.Component {
       ratingValue: 0,
       ratingUsername: this.props.username,
       ratingClicked: false,
-      userLoggedIn: window.localStorage.getItem('username'),
-      userLoggedInId: null,
+      userLoggedIn: JSON.parse(window.localStorage.getItem('account')),
       accountId: null,
       newComment: null,
       route: parseRoute(window.location.hash),
@@ -227,16 +226,20 @@ export default class AccountCard extends React.Component {
 
   handleCheckClick() {
     const data = {
-      whoRated: this.state.userLoggedInId,
+      whoRated: this.state.userLoggedIn.account.accountId,
       ratedWho: this.state.accountId,
       rating: (this.state.ratingValue / 2),
       comment: this.state.newComment,
-      whoComment: this.state.userLoggedInId,
+      whoComment: this.state.userLoggedIn.account.accountId,
       commentWho: this.state.accountId
     };
     const requestObj = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        account: this.state.userLoggedIn.account,
+        token: this.state.userLoggedIn.token
+      },
       body: JSON.stringify(data)
     };
     fetch('/api/uploads/ratings', requestObj)
@@ -246,7 +249,12 @@ export default class AccountCard extends React.Component {
           ratingClicked: false
         });
         const requestObj = {
-          method: 'GET'
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            account: this.state.userLoggedIn.account,
+            token: this.state.userLoggedIn.token
+          }
         };
         fetch(`/api/accounts/${this.props.username}`, requestObj)
           .then(result => result.json())
@@ -263,7 +271,11 @@ export default class AccountCard extends React.Component {
 
     const requestObj2 = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        account: this.state.userLoggedIn.account,
+        token: this.state.userLoggedIn.token
+      },
       body: JSON.stringify(data)
     };
 
@@ -300,7 +312,12 @@ export default class AccountCard extends React.Component {
 
   componentDidMount() {
     const requestObj = {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        account: this.state.userLoggedIn.account,
+        token: this.state.userLoggedIn.token
+      }
     };
     fetch(`/api/accounts/${this.props.username}`, requestObj)
       .then(result => result.json())
@@ -310,15 +327,6 @@ export default class AccountCard extends React.Component {
           photoUrl: result.photoUrl,
           happyLevel: this.createHappyLevel(result.currentRating),
           accountId: result.accountId
-        });
-      })
-      .catch(err => console.error(err));
-
-    fetch(`/api/accounts/${this.state.userLoggedIn}`, requestObj)
-      .then(result => result.json())
-      .then(result => {
-        this.setState({
-          userLoggedInId: result.accountId
         });
       })
       .catch(err => console.error(err));
@@ -336,7 +344,12 @@ export default class AccountCard extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.username !== prevProps.username) {
       const requestObj = {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          account: this.state.userLoggedIn.account,
+          token: this.state.userLoggedIn.token
+        }
       };
       fetch(`/api/accounts/${this.props.username}`, requestObj)
         .then(result => result.json())
