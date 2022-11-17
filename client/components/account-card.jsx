@@ -183,12 +183,11 @@ export default class AccountCard extends React.Component {
         </div>
       );
     }
-    const fiveStars = <> {fiveStarsArray[0]} {fiveStarsArray[1]} {fiveStarsArray[2]} {fiveStarsArray[3]} {fiveStarsArray[4]} </>;
     return (
       <>
         <div className='column-full'>
           <div onClick={this.handleStarClick} className='fa-star-holder flex-center'>
-            {fiveStars}
+            {fiveStarsArray}
           </div>
         </div>
         <div className='fa-check-holder flex-center'>
