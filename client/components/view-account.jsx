@@ -6,7 +6,8 @@ export default class ViewAccount extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentRating: null
+      currentRating: null,
+      userLoggedIn: JSON.parse(window.localStorage.getItem('account'))
     };
 
     this.displayingPage = this.displayingPage.bind(this);
@@ -15,7 +16,11 @@ export default class ViewAccount extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.username !== prevProps.username) {
       const requestObj = {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          token: this.state.userLoggedIn.token
+        }
       };
       fetch(`/api/accounts/${this.props.username}`, requestObj)
         .then(result => result.json())
@@ -30,7 +35,11 @@ export default class ViewAccount extends React.Component {
 
   componentDidMount() {
     const requestObj = {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        token: this.state.userLoggedIn.token
+      }
     };
     fetch(`/api/accounts/${this.props.username}`, requestObj)
       .then(result => result.json())
@@ -58,6 +67,10 @@ export default class ViewAccount extends React.Component {
   }
 
   render() {
+    if (!this.state.userLoggedIn) {
+      window.location.hash = '#sign-up';
+      return null;
+    }
     return (
       this.displayingPage()
     );

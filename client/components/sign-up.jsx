@@ -6,13 +6,15 @@ export default class CreateAccount extends React.Component {
     this.state = {
       imgSrc: null,
       username: null,
-      accountId: null
+      accountId: null,
+      password: null,
+      userLoggedIn: JSON.parse(window.localStorage.getItem('account'))
     };
     this.fileInputRef = React.createRef();
     this.handleUpload = this.handleUpload.bind(this);
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.addingInitialRating = this.addingInitialRating.bind(this);
   }
 
   handleUpload(event) {
@@ -23,65 +25,48 @@ export default class CreateAccount extends React.Component {
     this.setState({ username: event.target.value });
   }
 
-  addingInitialRating() {
-    const username = this.state.username;
-    const requestObj = {
-      method: 'GET'
-    };
-    fetch(`/api/accounts/${this.state.username}`, requestObj)
-      .then(result => result.json())
-      .then(result => {
-        this.setState({
-          accountId: result.accountId
-        });
-        const data = {
-          ratedWho: result.accountId,
-          rating: 5,
-          whoRated: 1
-        };
-        const requestObj2 = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        };
-        fetch('/api/uploads/ratings', requestObj2)
-          .catch(err => console.error(err));
-        window.localStorage.setItem('username', username);
-        window.location.hash = `#view-account?username=${username}`;
-      })
-      .catch(err => console.error(err));
+  handlePasswordChange(event) {
+    this.setState({ password: event.target.value });
   }
 
   handleSubmit(event) {
     event.preventDefault();
 
     const form = new FormData();
-    form.append('newUsername', this.state.username);
+    form.append('username', this.state.username);
+    form.append('password', this.state.password);
     form.append('image', this.fileInputRef.current.files[0]);
     const requestObj = {
       method: 'POST',
       body: form
     };
-    fetch('/api/uploads', requestObj)
+    fetch('/api/auth/sign-up', requestObj)
       .then(result => result.json())
       .then(result => {
         this.setState({
-          username: ''
+          username: '',
+          password: ''
         });
-        this.addingInitialRating();
-        this.fileInputRef.current.value = null;
       })
       .catch(err => console.error(err));
     this.setState({ imgSrc: null });
     event.target.reset();
+    window.location.hash = '#sign-in';
+  }
+
+  componentDidMount() {
+    if (this.state.userLoggedIn) {
+      this.setState({ username: this.state.userLoggedIn.account.username });
+      window.location.hash = `#view-account?username=${this.state.userLoggedIn.account.username}`;
+    }
   }
 
   render() {
     return (
       <div className='container'>
         <div className='row flex-center'>
-          <div className='column-full'>
-            <i className="fa-regular fa-4x fa-face-smile fa-face-smile-style" />
+          <div className='column-full flex-center'>
+            <h1 className='view-profile-name log-in-header'> Sign Up</h1>
           </div>
         </div>
         <div className='row'>
@@ -100,6 +85,19 @@ export default class CreateAccount extends React.Component {
                   required />
                 </label>
               </div>
+              <div>
+                <label htmlFor='newPassword'>
+                  <input
+                    autoComplete="off"
+                    onChange={this.handlePasswordChange}
+                    className='new-user-name-style'
+                    type='password'
+                    placeholder='Password'
+                    name='newPassword'
+                    required />
+                </label>
+
+              </div>
               <div className='column-full image-upload-holder flex-center'>
                 <label htmlFor='new-profile-img'>
                   {this.state.imgSrc
@@ -115,11 +113,12 @@ export default class CreateAccount extends React.Component {
                     required
                     accept=".png, .jpg, .jpeg, .gif" />
               </div>
-              <div className='column-full fa-check-holder'>
+              <div className='column-full fa-check-holder flex-center'>
                 <label>
                   <i htmlFor='profileSubmit' className="fa-solid fa-2x fa-check fa-check-style" />
                   <input id='profileSubmit' type='submit'/>
                 </label>
+                <a href='#sign-in' className='log-in-nav'> Sign in</a>
               </div>
             </form>
           </div>

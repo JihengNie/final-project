@@ -13,22 +13,21 @@ export default class AccountCard extends React.Component {
       ratingValue: 0,
       ratingUsername: this.props.username,
       ratingClicked: false,
-      userLoggedIn: window.localStorage.getItem('username'),
-      userLoggedInId: null,
+      userLoggedIn: JSON.parse(window.localStorage.getItem('account')),
       accountId: null,
       newComment: null,
       route: parseRoute(window.location.hash),
       toggleCommentBox: false,
       comment: null
     };
-    this.displayingStars = this.displayingStars.bind(this);
     this.moodStar = this.moodStar.bind(this);
     this.smileyFaceColor = this.smileyFaceColor.bind(this);
+    this.createHappyLevel = this.createHappyLevel.bind(this);
+    this.displayingStars = this.displayingStars.bind(this);
     this.displayingName = this.displayingName.bind(this);
     this.displayingRating = this.displayingRating.bind(this);
     this.displayingNewRating = this.displayingNewRating.bind(this);
     this.displayingCommentAndRating = this.displayingCommentAndRating.bind(this);
-    this.createHappyLevel = this.createHappyLevel.bind(this);
     this.handleStarHover = this.handleStarHover.bind(this);
     this.handleStarClick = this.handleStarClick.bind(this);
     this.handleCheckClick = this.handleCheckClick.bind(this);
@@ -66,6 +65,8 @@ export default class AccountCard extends React.Component {
     const starArray = [neturalStar, fullStar, halfStar];
     return starArray;
   }
+
+  // ------------------- Displaying functions  ---------------------------//
 
   displayingStars(happyLevel, rating) {
     if (this.props.hideStars) {
@@ -108,9 +109,9 @@ export default class AccountCard extends React.Component {
       const commentsInArray = this.state.comment.map((items, index) => {
         return (
           <CreateComment
-          key={index}
-          photoUrl={items.photoUrl}
-          comment={items.comment} />
+            key={index}
+            photoUrl={items.photoUrl}
+            comment={items.comment} />
         );
       });
       return (
@@ -159,6 +160,57 @@ export default class AccountCard extends React.Component {
     </h1>;
   }
 
+  displayingNewRating() {
+    if (this.props.hideNewRating) {
+      return;
+    }
+    const fiveStarsArray = [];
+    for (let i = 1; i < 10; i = i + 2) {
+      fiveStarsArray.push(
+        <div className="star-div" key={i}>
+          <span className={`half-star ${this.state.ratingValue < i ? 'netural' : 'happy'}`}>
+            <label onMouseEnter={this.handleStarHover} id={i} htmlFor={`rating${i}`}>
+              <i className="fa-solid fa-star fa-star-style rating-stars" />
+            </label>
+          </span>
+          <span>
+            <label id={i + 1} htmlFor={`rating${i + 1}`}>
+              <i onMouseEnter={this.handleStarHover} id={i + 1}
+                className={`fa-solid fa-star fa-star-style rating-stars
+                ${this.state.ratingValue < i + 1 ? 'netural' : 'happy'}`} />
+            </label>
+          </span>
+        </div>
+      );
+    }
+    return (
+      <>
+        <div className='column-full'>
+          <div onClick={this.handleStarClick} className='fa-star-holder flex-center'>
+            {fiveStarsArray}
+          </div>
+        </div>
+        <div className='fa-check-holder flex-center'>
+          <i onClick={this.handleXClick} className="fa-solid fa-2x fa-x fa-check-style rating-buttons-x-style" />
+          <i onClick={this.handleCheckClick} className="fa-solid fa-2x fa-check fa-check-style" />
+        </div>
+      </>
+    );
+  }
+
+  displayingName() {
+    if (this.props.hideName) {
+      return;
+    }
+    if (this.state.route.path === 'view-other-accounts') {
+      return <a href={`#view-account?username=${this.props.username}`} className='view-profile-name'>{this.props.username}</a>;
+    } else {
+      return <h1 href={`#view-account?username=${this.props.username}`} className='view-profile-name'>{this.props.username}</h1>;
+    }
+  }
+
+  // ------------------- Handle event functions  ---------------------------//
+
   handleCommentChange(event) {
     this.setState({ newComment: event.target.value });
   }
@@ -173,16 +225,19 @@ export default class AccountCard extends React.Component {
 
   handleCheckClick() {
     const data = {
-      whoRated: this.state.userLoggedInId,
+      whoRated: this.state.userLoggedIn.account.accountId,
       ratedWho: this.state.accountId,
       rating: (this.state.ratingValue / 2),
       comment: this.state.newComment,
-      whoComment: this.state.userLoggedInId,
+      whoComment: this.state.userLoggedIn.account.accountId,
       commentWho: this.state.accountId
     };
     const requestObj = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        token: this.state.userLoggedIn.token
+      },
       body: JSON.stringify(data)
     };
     fetch('/api/uploads/ratings', requestObj)
@@ -192,7 +247,11 @@ export default class AccountCard extends React.Component {
           ratingClicked: false
         });
         const requestObj = {
-          method: 'GET'
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            token: this.state.userLoggedIn.token
+          }
         };
         fetch(`/api/accounts/${this.props.username}`, requestObj)
           .then(result => result.json())
@@ -209,7 +268,10 @@ export default class AccountCard extends React.Component {
 
     const requestObj2 = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        token: this.state.userLoggedIn.token
+      },
       body: JSON.stringify(data)
     };
 
@@ -242,59 +304,19 @@ export default class AccountCard extends React.Component {
     }
   }
 
-  displayingNewRating() {
-    if (this.props.hideNewRating) {
-      return;
-    }
-    const fiveStarsArray = [];
-    for (let i = 1; i < 10; i = i + 2) {
-      fiveStarsArray.push(
-        <div className="star-div">
-          <span className={`half-star ${this.state.ratingValue < i ? 'netural' : 'happy'}`}>
-            <label onMouseEnter={this.handleStarHover} id={i} htmlFor={`rating${i}`}>
-              <i className="fa-solid fa-star fa-star-style rating-stars"/>
-            </label>
-          </span>
-          <span>
-            <label id={i + 1} htmlFor={`rating${i + 1}`}>
-              <i onMouseEnter={this.handleStarHover} id={i + 1}
-                className={`fa-solid fa-star fa-star-style rating-stars
-                ${this.state.ratingValue < i + 1 ? 'netural' : 'happy'}`} />
-            </label>
-          </span>
-        </div>
-      );
-    }
-    const fiveStars = <> {fiveStarsArray[0]} {fiveStarsArray[1]} {fiveStarsArray[2]} {fiveStarsArray[3]} {fiveStarsArray[4]} </>;
-    return (
-      <>
-        <div className='column-full'>
-          <div onClick={this.handleStarClick} className='fa-star-holder flex-center'>
-            {fiveStars}
-          </div>
-        </div>
-        <div className='fa-check-holder flex-center'>
-          <i onClick={this.handleXClick} className="fa-solid fa-2x fa-x fa-check-style rating-buttons-x-style" />
-          <i onClick={this.handleCheckClick} className="fa-solid fa-2x fa-check fa-check-style" />
-        </div>
-      </>
-    );
-  }
-
-  displayingName() {
-    if (this.props.hideName) {
-      return;
-    }
-    if (this.state.route.path === 'view-other-accounts') {
-      return <a href={`#view-account?username=${this.props.username}`} className='view-profile-name'>{this.props.username}</a>;
-    } else {
-      return <h1 href={`#view-account?username=${this.props.username}`} className='view-profile-name'>{this.props.username}</h1>;
-    }
-  }
+  // ------------------- Lifecycle functions  ---------------------------//
 
   componentDidMount() {
+    if (!this.state.userLoggedIn) {
+      window.location.hash = '#sign-up';
+      return null;
+    }
     const requestObj = {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        token: this.state.userLoggedIn.token
+      }
     };
     fetch(`/api/accounts/${this.props.username}`, requestObj)
       .then(result => result.json())
@@ -304,15 +326,6 @@ export default class AccountCard extends React.Component {
           photoUrl: result.photoUrl,
           happyLevel: this.createHappyLevel(result.currentRating),
           accountId: result.accountId
-        });
-      })
-      .catch(err => console.error(err));
-
-    fetch(`/api/accounts/${this.state.userLoggedIn}`, requestObj)
-      .then(result => result.json())
-      .then(result => {
-        this.setState({
-          userLoggedInId: result.accountId
         });
       })
       .catch(err => console.error(err));
@@ -330,7 +343,11 @@ export default class AccountCard extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.username !== prevProps.username) {
       const requestObj = {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          token: this.state.userLoggedIn.token
+        }
       };
       fetch(`/api/accounts/${this.props.username}`, requestObj)
         .then(result => result.json())
@@ -359,6 +376,10 @@ export default class AccountCard extends React.Component {
   }
 
   render() {
+    if (!this.state.userLoggedIn) {
+      window.location.hash = '#sign-up';
+      return null;
+    }
     return (
       <div className='row max-width-500px '>
         <div className='column-full flex-center'>

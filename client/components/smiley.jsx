@@ -4,10 +4,9 @@ export default class Smiley extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: window.localStorage.getItem('username')
+      userLoggedIn: JSON.parse(window.localStorage.getItem('account'))
     };
     this.createHappyLevel = this.createHappyLevel.bind(this);
-    this.handleLoad = this.handleLoad.bind(this);
   }
 
   createHappyLevel(rating) {
@@ -21,18 +20,20 @@ export default class Smiley extends React.Component {
     }
   }
 
-  handleLoad(event) {
-
-  }
-
   componentDidMount() {
-    window.addEventListener('load', this.handleLoad);
+    if (!this.state.userLoggedIn) {
+      window.location.hash = '#sign-up';
+    }
   }
 
   render() {
+    if (!this.state.userLoggedIn) {
+      window.location.hash = '#sign-up';
+      return null;
+    }
     const happyLevel = this.createHappyLevel(this.props.currentRating);
     return (
-      <a href={`#view-account?username=${this.state.username}`}>
+      <a href={`#view-account?username=${this.state.userLoggedIn.account.username}`}>
         <i className={`fa-regular fa-3x fa-face-smile fa-face-smile-style ${happyLevel}`} />
       </a>
     );

@@ -68,6 +68,24 @@ input[type="submit"] {
   cursor: pointer;
 }
 
+.log-in-nav {
+  font-size: 1.5rem;
+  color: #808080;
+  border: 2px solid #808080;
+  border-radius: 8px;
+  padding: 0.75rem;
+  transition: 0.25s;
+  margin-left: 3rem;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.log-in-nav:hover {
+  color: #d7c9b4;
+  border: 2px solid #d7c9b4;
+  cursor: pointer;
+}
+
 .left-align {
   text-align: left;
 }
@@ -78,7 +96,7 @@ input[type="submit"] {
   padding-left: 0.5rem;
   border-radius: 4px;
   margin: auto;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   max-width: 16rem;
   border: 2px solid #808080;
   color: #808080;
@@ -113,6 +131,10 @@ input[type="submit"] {
   max-width: 30rem;
   text-decoration: none;
   word-break: break-word;
+}
+
+.log-in-header {
+  margin: 2rem 0;
 }
 
 .fa-star-holder {
