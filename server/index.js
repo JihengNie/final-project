@@ -124,6 +124,19 @@ app.get('/api/comments/:username', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/followers', (req, res, next) => {
+  const { follower, following } = req.headers.data;
+  const sql = `
+    select *
+    from "followers"
+    where "follower" = $1 and "following" = $2;
+  `;
+  const params = [follower, following];
+  db.query(sql, params)
+    .then(result => res.json(result.rows[0]))
+    .catch(err => next(err));
+});
+
 app.get('/api/other-accounts/', (req, res, next) => {
   const sql = `
     select "username"
@@ -216,6 +229,24 @@ app.post('/api/uploads/ratings', (req, res, next) => {
     ;
   `;
   const params = [whoRated, ratedWho, rating];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/uploads/followers', (req, res, next) => {
+  const { follower, following } = req.body;
+  if (!following) {
+    throw new ClientError(400, 'Who you are following is empty');
+  }
+  const sql = `
+    insert into "followers" ("follower", "following")
+    values ($1, $2)
+    returning *
+    `;
+  const params = [follower, following];
   db.query(sql, params)
     .then(result => {
       res.json(result.rows[0]);
