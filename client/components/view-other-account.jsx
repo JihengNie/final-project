@@ -44,7 +44,6 @@ export default class ViewOtherAccount extends React.Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        account: this.state.userLoggedIn.account,
         token: this.state.userLoggedIn.token
       }
     };

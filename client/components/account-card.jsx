@@ -167,7 +167,7 @@ export default class AccountCard extends React.Component {
     const fiveStarsArray = [];
     for (let i = 1; i < 10; i = i + 2) {
       fiveStarsArray.push(
-        <div className="star-div">
+        <div className="star-div" key={i}>
           <span className={`half-star ${this.state.ratingValue < i ? 'netural' : 'happy'}`}>
             <label onMouseEnter={this.handleStarHover} id={i} htmlFor={`rating${i}`}>
               <i className="fa-solid fa-star fa-star-style rating-stars" />
@@ -236,7 +236,6 @@ export default class AccountCard extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        account: this.state.userLoggedIn.account,
         token: this.state.userLoggedIn.token
       },
       body: JSON.stringify(data)
@@ -251,7 +250,6 @@ export default class AccountCard extends React.Component {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            account: this.state.userLoggedIn.account,
             token: this.state.userLoggedIn.token
           }
         };
@@ -272,7 +270,6 @@ export default class AccountCard extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        account: this.state.userLoggedIn.account,
         token: this.state.userLoggedIn.token
       },
       body: JSON.stringify(data)
@@ -318,7 +315,6 @@ export default class AccountCard extends React.Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        account: this.state.userLoggedIn.account,
         token: this.state.userLoggedIn.token
       }
     };
@@ -350,7 +346,6 @@ export default class AccountCard extends React.Component {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          account: this.state.userLoggedIn.account,
           token: this.state.userLoggedIn.token
         }
       };
