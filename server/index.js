@@ -127,14 +127,19 @@ app.get('/api/comments/:username', (req, res, next) => {
 app.get('/api/followers/:accountId', (req, res, next) => {
   const accountId = req.params.accountId;
   const sql = `
-      SELECT DISTINCT
+      SELECT "following",
       "username",
-      "following"
-      FROM "accounts"
-      JOIN "followers"
-      ON "accountId" = "follower"
-      WHERE "accountId" = $1
-
+      "photoUrl"
+      FROM
+        (SELECT DISTINCT
+        "following"
+        FROM "accounts"
+        JOIN "followers"
+        ON "accountId" = "follower"
+        WHERE "accountId" = $1
+        ) as "a"
+      LEFT JOIN "accounts" as "b"
+      ON "b"."accountId" = "a"."following"
   `;
   const params = [accountId];
   db.query(sql, params)

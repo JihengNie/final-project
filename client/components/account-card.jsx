@@ -216,6 +216,7 @@ export default class AccountCard extends React.Component {
   // ------------------- Handle event functions  ---------------------------//
 
   handleFollowClick(event) {
+    this.props.updating();
     const data = {
       follower: this.state.userLoggedIn.account.accountId,
       following: this.state.accountId
@@ -244,12 +245,11 @@ export default class AccountCard extends React.Component {
           .then(result => result.json())
           .then(result => {
             const followerList = result.map(items => items.following);
-            let variable = 'Nahhhh FAM';
+            let style;
             if (followerList.indexOf(parseInt(id)) >= 0) {
-              variable = 'following';
+              style = 'following';
             }
-            this.setState({ follower: variable });
-            this.setState({ followerList });
+            this.setState({ follower: style });
           })
           .catch(err => console.error(err));
       })
@@ -378,12 +378,11 @@ export default class AccountCard extends React.Component {
           .then(result => result.json())
           .then(result => {
             const followerList = result.map(items => items.following);
-            let variable = 'Nahhhh FAM';
+            let style;
             if (followerList.indexOf(parseInt(id)) >= 0) {
-              variable = 'following';
+              style = 'following';
             }
-            this.setState({ follower: variable });
-            this.setState({ followerList });
+            this.setState({ follower: style });
           })
           .catch(err => console.error(err));
       })
@@ -424,12 +423,11 @@ export default class AccountCard extends React.Component {
             .then(result => result.json())
             .then(result => {
               const followerList = result.map(items => items.following);
-              let variable = 'Nahhhh FAM';
+              let style;
               if (followerList.indexOf(parseInt(id)) >= 0) {
-                variable = 'following';
+                style = 'following';
               }
-              this.setState({ follower: variable });
-              this.setState({ followerList });
+              this.setState({ follower: style });
             })
             .catch(err => console.error(err));
         })

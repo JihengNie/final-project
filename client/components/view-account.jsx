@@ -9,7 +9,8 @@ export default class ViewAccount extends React.Component {
     this.state = {
       currentRating: null,
       sidebar: false,
-      userLoggedIn: JSON.parse(window.localStorage.getItem('account'))
+      userLoggedIn: JSON.parse(window.localStorage.getItem('account')),
+      followingList: null
     };
 
     this.displayingPage = this.displayingPage.bind(this);
@@ -18,6 +19,19 @@ export default class ViewAccount extends React.Component {
 
   handleUserClick() {
     this.setState({ sidebar: !this.state.sidebar });
+    const requestObj = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        token: this.state.userLoggedIn.token
+      }
+    };
+    fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+      .then(result => result.json())
+      .then(result => {
+        this.setState({ followingList: result });
+      })
+      .catch(err => console.error(err));
   }
 
   componentDidUpdate(prevProps) {
@@ -35,6 +49,12 @@ export default class ViewAccount extends React.Component {
           this.setState({
             currentRating: result.currentRating
           });
+        })
+        .catch(err => console.error(err));
+      fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+        .then(result => result.json())
+        .then(result => {
+          this.setState({ followingList: result });
         })
         .catch(err => console.error(err));
     }
@@ -56,6 +76,13 @@ export default class ViewAccount extends React.Component {
         });
       })
       .catch(err => console.error(err));
+
+    fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+      .then(result => result.json())
+      .then(result => {
+        this.setState({ followingList: result });
+      })
+      .catch(err => console.error(err));
   }
 
   displayingPage() {
@@ -75,7 +102,7 @@ export default class ViewAccount extends React.Component {
           </div>
           <AccountCard username={this.props.username} view="current-user" hideNewRating={true} displayCurrentUserRating={true} />
         </div>
-        {this.state.sidebar ? <Sidebar closeSidebar={this.state.sidebar} handleChange={this.handleUserClick}/> : null}
+        {this.state.sidebar ? <Sidebar followerList={this.state.followingList} closeSidebar={this.state.sidebar} handleChange={this.handleUserClick}/> : null}
       </>
     );
   }

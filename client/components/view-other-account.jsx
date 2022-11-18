@@ -12,14 +12,29 @@ export default class ViewOtherAccount extends React.Component {
       currentRating: null,
       userLoggedIn: JSON.parse(window.localStorage.getItem('account')),
       sidebar: false,
-      currentIndex: 1
+      currentIndex: 1,
+      followingList: null
     };
     this.handleDirectionClick = this.handleDirectionClick.bind(this);
     this.handleUserClick = this.handleUserClick.bind(this);
+    this.updatingFollowerState = this.updatingFollowerState.bind(this);
   }
 
   handleUserClick() {
+    const requestObj = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        token: this.state.userLoggedIn.token
+      }
+    };
     this.setState({ sidebar: !this.state.sidebar });
+    fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+      .then(result => result.json())
+      .then(result => {
+        this.setState({ followingList: result });
+      })
+      .catch(err => console.error(err));
   }
 
   handleDirectionClick(event) {
@@ -40,6 +55,22 @@ export default class ViewOtherAccount extends React.Component {
         currentIndex
       });
     }
+  }
+
+  updatingFollowerState() {
+    const requestObj = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        token: this.state.userLoggedIn.token
+      }
+    };
+    fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+      .then(result => result.json())
+      .then(result => {
+        this.setState({ followingList: result });
+      })
+      .catch(err => console.error(err));
   }
 
   componentDidMount() {
@@ -71,6 +102,13 @@ export default class ViewOtherAccount extends React.Component {
         this.setState({
           otherUsers
         });
+      })
+      .catch(err => console.error(err));
+
+    fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+      .then(result => result.json())
+      .then(result => {
+        this.setState({ followingList: result });
       })
       .catch(err => console.error(err));
   }
@@ -111,14 +149,14 @@ export default class ViewOtherAccount extends React.Component {
               <div className='none-focus-cards left'>
                 <AccountCard username={userPreviousIndex} hideNewRating={true} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards' />
               </div>
-              <AccountCard username={userCurrentIndex} />
+              <AccountCard username={userCurrentIndex} updating={this.updatingFollowerState}/>
               <div className='none-focus-cards right'>
                 <AccountCard username={userNextIndex} hideNewRating={true} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards overflow' />
               </div>
               <i onClick={this.handleDirectionClick} className="fa-solid fa-chevron-right chevron-style right" />
             </div>
           </div>
-          {this.state.sidebar ? <Sidebar closeSidebar={this.state.sidebar} handleChange={this.handleUserClick} /> : null}
+          {this.state.sidebar ? <Sidebar followerList={this.state.followingList} closeSidebar={this.state.sidebar} handleChange={this.handleUserClick} /> : null}
         </>
       );
     }

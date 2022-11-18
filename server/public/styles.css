@@ -337,8 +337,48 @@ input[type="submit"] {
   color: black;
 }
 
+.follower-card-holder {
+  margin: 0.5rem;
+  background-color: black;
+  padding: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-radius: 16px;
+}
+
 .following {
   color: gold;
+}
+
+.follower-list-holder {
+  position: absolute;
+  top: 5rem;
+  right: 2.5rem;
+  width: 100%;
+  overflow: auto;
+  max-width: fit-content;
+  max-height: 500px;
+  justify-content: start;
+}
+
+.sidebar-image-holder {
+  object-fit: none;
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.sidebar-image-holder > img {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 50%;
+  border: 1px solid #353650;
+}
+
+.sidebar-text-style {
+  color: #707981;
+  font-size: 1rem;
+  padding-top: 0.75rem;
+  margin-left: 0.5rem;
+  text-decoration: none;
 }
 
 @media screen and (max-width: 768px) {
@@ -358,6 +398,21 @@ input[type="submit"] {
 }
 
 @media screen and (min-width: 768px) {
+  .follower-list-holder {
+    right: 4rem;
+    top: 6rem;
+    max-height: 800px;
+  }
+
+  .sidebar-image-holder > img {
+    height: 5rem;
+    width: 5rem;
+  }
+
+  .sidebar-text-style {
+    font-size: 2rem;
+  }
+
   .sidebar {
     width: 30rem;
   }
