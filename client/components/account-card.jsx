@@ -19,7 +19,8 @@ export default class AccountCard extends React.Component {
       route: parseRoute(window.location.hash),
       toggleCommentBox: false,
       comment: null,
-      follower: false
+      follower: null,
+      followerList: null
     };
     this.moodStar = this.moodStar.bind(this);
     this.smileyFaceColor = this.smileyFaceColor.bind(this);
@@ -157,7 +158,7 @@ export default class AccountCard extends React.Component {
     if (this.props.hideRating) {
       return;
     }
-    return <h1 className={`${this.state.follower ? 'following' : null}`}> {this.state.currentRating}
+    return <h1 className={`${this.state.follower}`}> {this.state.currentRating}
       <i onClick={this.handleCommentClick} className="fa-solid fa-comment fa-comment-style" />
     </h1>;
   }
@@ -194,7 +195,7 @@ export default class AccountCard extends React.Component {
         </div>
         <div className='fa-check-holder flex-center'>
           <i onClick={this.handleXClick} className="fa-solid fa-2x fa-x fa-check-style rating-buttons-x-style" />
-          <i onClick={this.handleFollowClick} className={`fa-solid fa-1x fa-follow-star-style fa-star ${this.state.follower ? 'following' : null} `} />
+          <i onClick={this.handleFollowClick} className={`fa-solid fa-1x fa-follow-star-style fa-star ${this.state.follower} `} />
           <i onClick={this.handleCheckClick} className="fa-solid fa-2x fa-check fa-check-style" />
         </div>
       </>
@@ -206,9 +207,9 @@ export default class AccountCard extends React.Component {
       return;
     }
     if (this.state.route.path === 'view-other-accounts') {
-      return <a href={`#view-account?username=${this.props.username}`} className={`view-profile-name ${this.state.follower ? 'following' : null}`}>{this.props.username}</a>;
+      return <a href={`#view-account?username=${this.props.username}`} className={`view-profile-name ${this.state.follower}`}>{this.props.username}</a>;
     } else {
-      return <h1 href={`#view-account?username=${this.props.username}`} className={`view-profile-name ${this.state.follower ? 'following' : null}`}>{this.props.username}</h1>;
+      return <h1 href={`#view-account?username=${this.props.username}`} className={`view-profile-name ${this.state.follower}`}>{this.props.username}</h1>;
     }
   }
 
@@ -227,12 +228,30 @@ export default class AccountCard extends React.Component {
       },
       body: JSON.stringify(data)
     };
+    const requestObj2 = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        token: this.state.userLoggedIn.token
+      }
+    };
+
     fetch('/api/uploads/followers/', requestObj)
       .then(result => result.json())
       .then(result => {
-        this.setState({
-          follower: true
-        });
+        const id = result.following;
+        fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj2)
+          .then(result => result.json())
+          .then(result => {
+            const followerList = result.map(items => items.following);
+            let variable = 'Nahhhh FAM';
+            if (followerList.indexOf(parseInt(id)) >= 0) {
+              variable = 'following';
+            }
+            this.setState({ follower: variable });
+            this.setState({ followerList });
+          })
+          .catch(err => console.error(err));
       })
       .catch(err => console.error(err));
   }
@@ -337,17 +356,12 @@ export default class AccountCard extends React.Component {
       window.location.hash = '#sign-up';
       return null;
     }
-    const data = {
-      follower: this.state.userLoggedIn.account.accountId,
-      following: this.state.accountId
-    };
 
     const requestObj = {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token,
-        data: JSON.stringify(data)
+        token: this.state.userLoggedIn.token
       }
     };
     fetch(`/api/accounts/${this.props.username}`, requestObj)
@@ -359,6 +373,19 @@ export default class AccountCard extends React.Component {
           happyLevel: this.createHappyLevel(result.currentRating),
           accountId: result.accountId
         });
+        const id = result.accountId;
+        fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+          .then(result => result.json())
+          .then(result => {
+            const followerList = result.map(items => items.following);
+            let variable = 'Nahhhh FAM';
+            if (followerList.indexOf(parseInt(id)) >= 0) {
+              variable = 'following';
+            }
+            this.setState({ follower: variable });
+            this.setState({ followerList });
+          })
+          .catch(err => console.error(err));
       })
       .catch(err => console.error(err));
 
@@ -371,27 +398,16 @@ export default class AccountCard extends React.Component {
       })
       .catch(err => console.error(err));
 
-    fetch('/api/followers', requestObj)
-      .then(result => result.json)
-      .then(result => {
-        if (result.follower) {
-          this.setState({ follower: true });
-        }
-      });
+    this.setState({ toggleCommentBox: false });
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.username !== prevProps.username) {
-      const data = {
-        follower: this.state.userLoggedIn.account.accountId,
-        following: this.state.accountId
-      };
       const requestObj = {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          token: this.state.userLoggedIn.token,
-          data: JSON.stringify(data)
+          token: this.state.userLoggedIn.token
         }
       };
       fetch(`/api/accounts/${this.props.username}`, requestObj)
@@ -403,6 +419,19 @@ export default class AccountCard extends React.Component {
             happyLevel: this.createHappyLevel(result.currentRating),
             accountId: result.accountId
           });
+          const id = result.accountId;
+          fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+            .then(result => result.json())
+            .then(result => {
+              const followerList = result.map(items => items.following);
+              let variable = 'Nahhhh FAM';
+              if (followerList.indexOf(parseInt(id)) >= 0) {
+                variable = 'following';
+              }
+              this.setState({ follower: variable });
+              this.setState({ followerList });
+            })
+            .catch(err => console.error(err));
         })
         .catch(err => console.error(err));
       this.setState({

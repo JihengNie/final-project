@@ -124,16 +124,21 @@ app.get('/api/comments/:username', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/api/followers', (req, res, next) => {
-  const { follower, following } = req.headers.data;
+app.get('/api/followers/:accountId', (req, res, next) => {
+  const accountId = req.params.accountId;
   const sql = `
-    select *
-    from "followers"
-    where "follower" = $1 and "following" = $2;
+      SELECT DISTINCT
+      "username",
+      "following"
+      FROM "accounts"
+      JOIN "followers"
+      ON "accountId" = "follower"
+      WHERE "accountId" = $1
+
   `;
-  const params = [follower, following];
+  const params = [accountId];
   db.query(sql, params)
-    .then(result => res.json(result.rows[0]))
+    .then(result => res.json(result.rows))
     .catch(err => next(err));
 });
 
