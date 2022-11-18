@@ -124,6 +124,24 @@ app.get('/api/comments/:username', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/followers/:accountId', (req, res, next) => {
+  const accountId = req.params.accountId;
+  const sql = `
+      SELECT DISTINCT
+      "username",
+      "following"
+      FROM "accounts"
+      JOIN "followers"
+      ON "accountId" = "follower"
+      WHERE "accountId" = $1
+
+  `;
+  const params = [accountId];
+  db.query(sql, params)
+    .then(result => res.json(result.rows))
+    .catch(err => next(err));
+});
+
 app.get('/api/other-accounts/', (req, res, next) => {
   const sql = `
     select "username"
@@ -216,6 +234,24 @@ app.post('/api/uploads/ratings', (req, res, next) => {
     ;
   `;
   const params = [whoRated, ratedWho, rating];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/uploads/followers', (req, res, next) => {
+  const { follower, following } = req.body;
+  if (!following) {
+    throw new ClientError(400, 'Who you are following is empty');
+  }
+  const sql = `
+    insert into "followers" ("follower", "following")
+    values ($1, $2)
+    returning *
+    `;
+  const params = [follower, following];
   db.query(sql, params)
     .then(result => {
       res.json(result.rows[0]);
