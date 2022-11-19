@@ -241,7 +241,7 @@ export default class AccountCard extends React.Component {
       .then(result => result.json())
       .then(result => {
         const id = result.following;
-        fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj2)
+        fetch('/api/followers', requestObj2)
           .then(result => result.json())
           .then(result => {
             const followerList = result.map(items => items.following);
@@ -374,7 +374,7 @@ export default class AccountCard extends React.Component {
           accountId: result.accountId
         });
         const id = result.accountId;
-        fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+        fetch('/api/followers', requestObj)
           .then(result => result.json())
           .then(result => {
             const followerList = result.map(items => items.following);
@@ -419,7 +419,7 @@ export default class AccountCard extends React.Component {
             accountId: result.accountId
           });
           const id = result.accountId;
-          fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+          fetch('/api/followers', requestObj)
             .then(result => result.json())
             .then(result => {
               const followerList = result.map(items => items.following);

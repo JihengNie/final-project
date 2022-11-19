@@ -29,7 +29,7 @@ export default class ViewOtherAccount extends React.Component {
       }
     };
     this.setState({ sidebar: !this.state.sidebar });
-    fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+    fetch('/api/followers', requestObj)
       .then(result => result.json())
       .then(result => {
         this.setState({ followingList: result });
@@ -65,7 +65,7 @@ export default class ViewOtherAccount extends React.Component {
         token: this.state.userLoggedIn.token
       }
     };
-    fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+    fetch('/api/followers', requestObj)
       .then(result => result.json())
       .then(result => {
         this.setState({ followingList: result });
@@ -105,7 +105,7 @@ export default class ViewOtherAccount extends React.Component {
       })
       .catch(err => console.error(err));
 
-    fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+    fetch('/api/followers', requestObj)
       .then(result => result.json())
       .then(result => {
         this.setState({ followingList: result });

@@ -124,8 +124,8 @@ app.get('/api/comments/:username', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/api/followers/:accountId', (req, res, next) => {
-  const accountId = req.params.accountId;
+app.get('/api/followers', (req, res, next) => {
+  const accountId = req.account.accountId;
   const sql = `
       SELECT "following",
       "username",
