@@ -5,18 +5,18 @@ export default class FollowerList extends React.Component {
     super(props);
     this.state = {
       userLoggedIn: JSON.parse(window.localStorage.getItem('account')),
-      followerList: this.props.followerList
+      followerListUpdate: null
     };
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.followerList !== prevProps.followerList) {
-      this.setState({ followerList: this.props.followerList });
+      this.setState({ followerListUpdate: true });
     }
   }
 
   render() {
-    const followers = this.state.followerList.map((item, index) => {
+    const followers = this.props.followerList.map((item, index) => {
       return (
         <div key={index} className='follower-card-holder'>
           <div className='sidebar-image-holder'>

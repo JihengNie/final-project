@@ -104,6 +104,7 @@ input[type="submit"] {
   margin-left: 3rem;
   white-space: nowrap;
   text-decoration: none;
+  background: none;
 }
 
 .log-in-nav:hover {
@@ -379,6 +380,17 @@ input[type="submit"] {
   padding-top: 0.75rem;
   margin-left: 0.5rem;
   text-decoration: none;
+}
+
+.demo-container {
+  display: flex;
+  justify-content: center;
+  margin-left: 3.5rem;
+  margin-top: 0.25rem;
+}
+
+.demo-container > button {
+  padding: 0.25rem;
 }
 
 @media screen and (max-width: 768px) {

@@ -11,6 +11,19 @@ export default class SignIn extends React.Component {
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDemoClick = this.handleDemoClick.bind(this);
+  }
+
+  handleDemoClick() {
+    const form = document.querySelector('form');
+    const nameInput = form.querySelector('[name="newUsername"]');
+    const passwordInput = form.querySelector('[name="newPassword"]');
+    nameInput.value = 'Bob Ross';
+    passwordInput.value = 'Password';
+    this.setState({
+      username: 'Bob Ross',
+      password: 'Password'
+    });
   }
 
   handleUsernameChange(event) {
@@ -92,6 +105,9 @@ export default class SignIn extends React.Component {
                 <a href='#sign-up' className='log-in-nav'> Sign up</a>
               </div>
             </form>
+            <div className='demo-container'>
+              <button onClick={this.handleDemoClick} className='log-in-nav'> Demo </button>
+            </div>
           </div>
         </div>
       </div>
