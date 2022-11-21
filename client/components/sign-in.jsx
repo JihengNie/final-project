@@ -15,11 +15,6 @@ export default class SignIn extends React.Component {
   }
 
   handleDemoClick() {
-    const form = document.querySelector('form');
-    const nameInput = form.querySelector('[name="newUsername"]');
-    const passwordInput = form.querySelector('[name="newPassword"]');
-    nameInput.value = 'Bob Ross';
-    passwordInput.value = 'Password';
     this.setState({
       username: 'Bob Ross',
       password: 'Password'
@@ -89,6 +84,7 @@ export default class SignIn extends React.Component {
               <div>
                 <label htmlFor='newPassword'>
                   <input
+                    value={this.state.password}
                     autoComplete="off"
                     onChange={this.handlePasswordChange}
                     className='new-user-name-style'
