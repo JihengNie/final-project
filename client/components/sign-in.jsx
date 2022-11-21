@@ -75,6 +75,7 @@ export default class SignIn extends React.Component {
               <div>
                 <label htmlFor='newUsername'>
                   <input
+                    value={this.state.username}
                     autoFocus
                     autoComplete="off"
                     onChange={this.handleUsernameChange}

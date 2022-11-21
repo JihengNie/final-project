@@ -172,12 +172,12 @@ export default class AccountCard extends React.Component {
       fiveStarsArray.push(
         <div className="star-div" key={i}>
           <span className={`half-star ${this.state.ratingValue < i ? 'netural' : 'happy'}`}>
-            <label onMouseEnter={this.handleStarHover} id={i} htmlFor={`rating${i}`}>
+            <label onMouseEnter={this.handleStarHover} id={i}>
               <i className="fa-solid fa-star fa-star-style rating-stars" />
             </label>
           </span>
           <span>
-            <label id={i + 1} htmlFor={`rating${i + 1}`}>
+            <label id={i + 1}>
               <i onMouseEnter={this.handleStarHover} id={i + 1}
                 className={`fa-solid fa-star fa-star-style rating-stars
                 ${this.state.ratingValue < i + 1 ? 'netural' : 'happy'}`} />

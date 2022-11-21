@@ -229,7 +229,7 @@ app.post('/api/uploads/ratings', (req, res, next) => {
   rating = Number(rating);
   if (!ratedWho) {
     throw new ClientError(400, 'Who is being rated and rating are required fields');
-  } else if (rating < 0 || rating > 10) {
+  } else if (rating < 0 || rating > 5) {
     throw new ClientError(400, 'Rating is outside of range');
   }
   const sql = `
