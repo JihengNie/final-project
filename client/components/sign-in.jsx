@@ -70,7 +70,7 @@ export default class SignIn extends React.Component {
               <div>
                 <label htmlFor='newUsername'>
                   <input
-                    value={this.state.username}
+                    value={this.state.username ? this.state.username : ''}
                     autoFocus
                     autoComplete="off"
                     onChange={this.handleUsernameChange}
@@ -84,7 +84,7 @@ export default class SignIn extends React.Component {
               <div>
                 <label htmlFor='newPassword'>
                   <input
-                    value={this.state.password}
+                    value={this.state.password ? this.state.password : ''}
                     autoComplete="off"
                     onChange={this.handlePasswordChange}
                     className='new-user-name-style'
