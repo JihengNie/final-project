@@ -218,14 +218,14 @@ export default class AccountCard extends React.Component {
   handleFollowClick(event) {
     this.props.updating();
     const data = {
-      follower: this.state.userLoggedIn.account.accountId,
+      follower: this.props.userLoggedIn.account.accountId,
       following: this.state.accountId
     };
     const requestObj = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       },
       body: JSON.stringify(data)
     };
@@ -233,7 +233,7 @@ export default class AccountCard extends React.Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       }
     };
 
@@ -270,18 +270,18 @@ export default class AccountCard extends React.Component {
 
   handleCheckClick() {
     const data = {
-      whoRated: this.state.userLoggedIn.account.accountId,
+      whoRated: this.props.userLoggedIn.account.accountId,
       ratedWho: this.state.accountId,
       rating: (this.state.ratingValue / 2),
       comment: this.state.newComment,
-      whoComment: this.state.userLoggedIn.account.accountId,
+      whoComment: this.props.userLoggedIn.account.accountId,
       commentWho: this.state.accountId
     };
     const requestObj = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       },
       body: JSON.stringify(data)
     };
@@ -295,7 +295,7 @@ export default class AccountCard extends React.Component {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            token: this.state.userLoggedIn.token
+            token: this.props.userLoggedIn.token
           }
         };
         fetch(`/api/accounts/${this.props.username}`, requestObj)
@@ -315,7 +315,7 @@ export default class AccountCard extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       },
       body: JSON.stringify(data)
     };
@@ -352,16 +352,12 @@ export default class AccountCard extends React.Component {
   // ------------------- Lifecycle functions  ---------------------------//
 
   componentDidMount() {
-    if (!this.state.userLoggedIn) {
-      window.location.hash = '#sign-up';
-      return null;
-    }
 
     const requestObj = {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       }
     };
     fetch(`/api/accounts/${this.props.username}`, requestObj)
@@ -406,7 +402,7 @@ export default class AccountCard extends React.Component {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          token: this.state.userLoggedIn.token
+          token: this.props.userLoggedIn.token
         }
       };
       fetch(`/api/accounts/${this.props.username}`, requestObj)
@@ -448,10 +444,6 @@ export default class AccountCard extends React.Component {
   }
 
   render() {
-    if (!this.state.userLoggedIn) {
-      window.location.hash = '#sign-up';
-      return null;
-    }
     return (
       <div className='row max-width-500px '>
         <div className='column-full flex-center'>

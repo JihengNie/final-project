@@ -10,7 +10,6 @@ export default class ViewOtherAccount extends React.Component {
       username: null,
       otherUsers: null,
       currentRating: null,
-      userLoggedIn: JSON.parse(window.localStorage.getItem('account')),
       sidebar: false,
       currentIndex: 1,
       followingList: null
@@ -25,7 +24,7 @@ export default class ViewOtherAccount extends React.Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       }
     };
     this.setState({ sidebar: !this.state.sidebar });
@@ -62,7 +61,7 @@ export default class ViewOtherAccount extends React.Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       }
     };
     fetch('/api/followers', requestObj)
@@ -74,7 +73,7 @@ export default class ViewOtherAccount extends React.Component {
   }
 
   componentDidMount() {
-    if (!this.state.userLoggedIn) {
+    if (!this.props.userLoggedIn) {
       window.location.hash = '#sign-up';
       return null;
     }
@@ -82,10 +81,10 @@ export default class ViewOtherAccount extends React.Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       }
     };
-    fetch(`/api/accounts/${this.state.userLoggedIn.account.username}`, requestObj)
+    fetch(`/api/accounts/${this.props.userLoggedIn.account.username}`, requestObj)
       .then(result => result.json())
       .then(result => {
         this.setState({
@@ -114,7 +113,7 @@ export default class ViewOtherAccount extends React.Component {
   }
 
   render() {
-    if (!this.state.userLoggedIn) {
+    if (!this.props.userLoggedIn) {
       window.location.hash = '#sign-up';
       return null;
     }
@@ -138,7 +137,7 @@ export default class ViewOtherAccount extends React.Component {
                 <a href='#view-other-accounts'><i className="fa-solid fa-house-chimney fa-3x fa-house-style" /></a>
               </div>
               <div className='column-third-always'>
-                <Smiley currentRating={this.state.currentRating}/>
+                <Smiley userLoggedIn={this.props.userLoggedIn} currentRating={this.state.currentRating}/>
               </div>
               <div className='column-third-always'>
                 <i onClick={this.handleUserClick} className="fa-solid fa-users  fa-3x fa-users-style" />
@@ -147,11 +146,11 @@ export default class ViewOtherAccount extends React.Component {
             <div className='flex-center row-no-wrap'>
               <i onClick={this.handleDirectionClick} className="fa-solid fa-chevron-left chevron-style left" />
               <div className='none-focus-cards left'>
-                <AccountCard username={userPreviousIndex} hideNewRating={true} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards' />
+                <AccountCard userLoggedIn={this.props.userLoggedIn} username={userPreviousIndex} hideNewRating={true} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards' />
               </div>
-              <AccountCard username={userCurrentIndex} updating={this.updatingFollowerState}/>
+              <AccountCard userLoggedIn={this.props.userLoggedIn} username={userCurrentIndex} updating={this.updatingFollowerState}/>
               <div className='none-focus-cards right'>
-                <AccountCard username={userNextIndex} hideNewRating={true} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards overflow' />
+                <AccountCard userLoggedIn={this.props.userLoggedIn} username={userNextIndex} hideNewRating={true} hideRating={true} hideName={true} hideStars={true} className='none-focus-cards overflow' />
               </div>
               <i onClick={this.handleDirectionClick} className="fa-solid fa-chevron-right chevron-style right" />
             </div>

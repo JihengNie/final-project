@@ -9,7 +9,6 @@ export default class ViewAccount extends React.Component {
     this.state = {
       currentRating: null,
       sidebar: false,
-      userLoggedIn: JSON.parse(window.localStorage.getItem('account')),
       followingList: null
     };
 
@@ -23,7 +22,7 @@ export default class ViewAccount extends React.Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       }
     };
     fetch('/api/followers', requestObj)
@@ -40,7 +39,7 @@ export default class ViewAccount extends React.Component {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          token: this.state.userLoggedIn.token
+          token: this.props.userLoggedIn.token
         }
       };
       fetch(`/api/accounts/${this.props.username}`, requestObj)
@@ -65,7 +64,7 @@ export default class ViewAccount extends React.Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       }
     };
     fetch(`/api/accounts/${this.props.username}`, requestObj)
@@ -94,13 +93,13 @@ export default class ViewAccount extends React.Component {
               <a href='#view-other-accounts'><i className="fa-solid fa-house-chimney fa-3x fa-house-style" /></a>
             </div>
             <div className='column-third-always'>
-              <Smiley currentRating={this.state.currentRating} />
+              <Smiley userLoggedIn={this.props.userLoggedIn} currentRating={this.state.currentRating} />
             </div>
             <div className='column-third-always'>
               <i onClick={this.handleUserClick} className="fa-solid fa-users  fa-3x fa-users-style" />
             </div>
           </div>
-          <AccountCard username={this.props.username} view="current-user" hideNewRating={true} displayCurrentUserRating={true} />
+          <AccountCard userLoggedIn={this.props.userLoggedIn} username={this.props.username} view="current-user" hideNewRating={true} displayCurrentUserRating={true} />
         </div>
         {this.state.sidebar ? <Sidebar followerList={this.state.followingList} closeSidebar={this.state.sidebar} handleChange={this.handleUserClick}/> : null}
       </>
@@ -108,7 +107,7 @@ export default class ViewAccount extends React.Component {
   }
 
   render() {
-    if (!this.state.userLoggedIn) {
+    if (!this.props.userLoggedIn) {
       window.location.hash = '#sign-up';
       return null;
     }

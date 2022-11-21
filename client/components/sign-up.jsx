@@ -7,8 +7,7 @@ export default class CreateAccount extends React.Component {
       imgSrc: null,
       username: null,
       accountId: null,
-      password: null,
-      userLoggedIn: JSON.parse(window.localStorage.getItem('account'))
+      password: null
     };
     this.fileInputRef = React.createRef();
     this.handleUpload = this.handleUpload.bind(this);
@@ -52,13 +51,6 @@ export default class CreateAccount extends React.Component {
     this.setState({ imgSrc: null });
     event.target.reset();
     window.location.hash = '#sign-in';
-  }
-
-  componentDidMount() {
-    if (this.state.userLoggedIn) {
-      this.setState({ username: this.state.userLoggedIn.account.username });
-      window.location.hash = `#view-account?username=${this.state.userLoggedIn.account.username}`;
-    }
   }
 
   render() {

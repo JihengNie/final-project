@@ -4,7 +4,6 @@ export default class FollowerList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userLoggedIn: JSON.parse(window.localStorage.getItem('account')),
       followerListUpdate: null
     };
   }
