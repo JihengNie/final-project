@@ -6,8 +6,9 @@ const jwt = require('jsonwebtoken');
 const ClientError = require('./client-error');
 const staticMiddleware = require('./static-middleware');
 const errorMiddleware = require('./error-middleware');
-const uploadsMiddleware = require('./uploads-middleware');
+// const uploadsMiddleware = require('./uploads-middleware');
 const authorizationMiddleware = require('./authorization-middleware');
+const uploadsMiddlewareAws = require('./uploads-middleware-aws');
 
 const app = express();
 
@@ -24,7 +25,7 @@ app.use(express.json());
 
 // ---------------------------- Auth ---------------------//
 
-app.post('/api/auth/sign-up', uploadsMiddleware, (req, res, next) => {
+app.post('/api/auth/sign-up', uploadsMiddlewareAws, (req, res, next) => {
   const { username, password } = req.body;
   if (!username || !password) {
     throw new ClientError(400, 'username and password are required fields');
@@ -124,17 +125,22 @@ app.get('/api/comments/:username', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/api/followers/:accountId', (req, res, next) => {
-  const accountId = req.params.accountId;
+app.get('/api/followers', (req, res, next) => {
+  const accountId = req.account.accountId;
   const sql = `
-      SELECT DISTINCT
+      SELECT "following",
       "username",
-      "following"
-      FROM "accounts"
-      JOIN "followers"
-      ON "accountId" = "follower"
-      WHERE "accountId" = $1
-
+      "photoUrl"
+      FROM
+        (SELECT DISTINCT
+        "following"
+        FROM "accounts"
+        JOIN "followers"
+        ON "accountId" = "follower"
+        WHERE "accountId" = $1
+        ) as "a"
+      LEFT JOIN "accounts" as "b"
+      ON "b"."accountId" = "a"."following"
   `;
   const params = [accountId];
   db.query(sql, params)
@@ -182,7 +188,7 @@ app.get('/api/accounts/:username', (req, res, next) => {
 
 // ---------------------------- POST REQUESTS ---------------------//
 
-app.post('/api/uploads', uploadsMiddleware, (req, res, next) => {
+app.post('/api/uploads', uploadsMiddlewareAws, (req, res, next) => {
   const { newUsername } = req.body;
   if (!newUsername) {
     throw new ClientError(400, 'username is a required field');
@@ -224,7 +230,7 @@ app.post('/api/uploads/ratings', (req, res, next) => {
   rating = Number(rating);
   if (!ratedWho) {
     throw new ClientError(400, 'Who is being rated and rating are required fields');
-  } else if (rating < 0 || rating > 10) {
+  } else if (rating < 0 || rating > 5) {
     throw new ClientError(400, 'Rating is outside of range');
   }
   const sql = `

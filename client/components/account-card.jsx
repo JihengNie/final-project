@@ -172,12 +172,12 @@ export default class AccountCard extends React.Component {
       fiveStarsArray.push(
         <div className="star-div" key={i}>
           <span className={`half-star ${this.state.ratingValue < i ? 'netural' : 'happy'}`}>
-            <label onMouseEnter={this.handleStarHover} id={i} htmlFor={`rating${i}`}>
+            <label onMouseEnter={this.handleStarHover} id={i}>
               <i className="fa-solid fa-star fa-star-style rating-stars" />
             </label>
           </span>
           <span>
-            <label id={i + 1} htmlFor={`rating${i + 1}`}>
+            <label id={i + 1}>
               <i onMouseEnter={this.handleStarHover} id={i + 1}
                 className={`fa-solid fa-star fa-star-style rating-stars
                 ${this.state.ratingValue < i + 1 ? 'netural' : 'happy'}`} />
@@ -216,15 +216,16 @@ export default class AccountCard extends React.Component {
   // ------------------- Handle event functions  ---------------------------//
 
   handleFollowClick(event) {
+    this.props.updating();
     const data = {
-      follower: this.state.userLoggedIn.account.accountId,
+      follower: this.props.userLoggedIn.account.accountId,
       following: this.state.accountId
     };
     const requestObj = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       },
       body: JSON.stringify(data)
     };
@@ -232,7 +233,7 @@ export default class AccountCard extends React.Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       }
     };
 
@@ -240,16 +241,15 @@ export default class AccountCard extends React.Component {
       .then(result => result.json())
       .then(result => {
         const id = result.following;
-        fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj2)
+        fetch('/api/followers', requestObj2)
           .then(result => result.json())
           .then(result => {
             const followerList = result.map(items => items.following);
-            let variable = 'Nahhhh FAM';
+            let style;
             if (followerList.indexOf(parseInt(id)) >= 0) {
-              variable = 'following';
+              style = 'following';
             }
-            this.setState({ follower: variable });
-            this.setState({ followerList });
+            this.setState({ follower: style });
           })
           .catch(err => console.error(err));
       })
@@ -270,18 +270,18 @@ export default class AccountCard extends React.Component {
 
   handleCheckClick() {
     const data = {
-      whoRated: this.state.userLoggedIn.account.accountId,
+      whoRated: this.props.userLoggedIn.account.accountId,
       ratedWho: this.state.accountId,
       rating: (this.state.ratingValue / 2),
       comment: this.state.newComment,
-      whoComment: this.state.userLoggedIn.account.accountId,
+      whoComment: this.props.userLoggedIn.account.accountId,
       commentWho: this.state.accountId
     };
     const requestObj = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       },
       body: JSON.stringify(data)
     };
@@ -295,7 +295,7 @@ export default class AccountCard extends React.Component {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            token: this.state.userLoggedIn.token
+            token: this.props.userLoggedIn.token
           }
         };
         fetch(`/api/accounts/${this.props.username}`, requestObj)
@@ -315,7 +315,7 @@ export default class AccountCard extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       },
       body: JSON.stringify(data)
     };
@@ -352,16 +352,12 @@ export default class AccountCard extends React.Component {
   // ------------------- Lifecycle functions  ---------------------------//
 
   componentDidMount() {
-    if (!this.state.userLoggedIn) {
-      window.location.hash = '#sign-up';
-      return null;
-    }
 
     const requestObj = {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        token: this.state.userLoggedIn.token
+        token: this.props.userLoggedIn.token
       }
     };
     fetch(`/api/accounts/${this.props.username}`, requestObj)
@@ -374,16 +370,15 @@ export default class AccountCard extends React.Component {
           accountId: result.accountId
         });
         const id = result.accountId;
-        fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+        fetch('/api/followers', requestObj)
           .then(result => result.json())
           .then(result => {
             const followerList = result.map(items => items.following);
-            let variable = 'Nahhhh FAM';
+            let style;
             if (followerList.indexOf(parseInt(id)) >= 0) {
-              variable = 'following';
+              style = 'following';
             }
-            this.setState({ follower: variable });
-            this.setState({ followerList });
+            this.setState({ follower: style });
           })
           .catch(err => console.error(err));
       })
@@ -407,7 +402,7 @@ export default class AccountCard extends React.Component {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          token: this.state.userLoggedIn.token
+          token: this.props.userLoggedIn.token
         }
       };
       fetch(`/api/accounts/${this.props.username}`, requestObj)
@@ -420,16 +415,15 @@ export default class AccountCard extends React.Component {
             accountId: result.accountId
           });
           const id = result.accountId;
-          fetch(`/api/followers/${this.state.userLoggedIn.account.accountId}`, requestObj)
+          fetch('/api/followers', requestObj)
             .then(result => result.json())
             .then(result => {
               const followerList = result.map(items => items.following);
-              let variable = 'Nahhhh FAM';
+              let style;
               if (followerList.indexOf(parseInt(id)) >= 0) {
-                variable = 'following';
+                style = 'following';
               }
-              this.setState({ follower: variable });
-              this.setState({ followerList });
+              this.setState({ follower: style });
             })
             .catch(err => console.error(err));
         })
@@ -450,10 +444,6 @@ export default class AccountCard extends React.Component {
   }
 
   render() {
-    if (!this.state.userLoggedIn) {
-      window.location.hash = '#sign-up';
-      return null;
-    }
     return (
       <div className='row max-width-500px '>
         <div className='column-full flex-center'>

@@ -23,17 +23,17 @@ export default class App extends React.Component {
 
   renderPage() {
     if (this.state.route.path === 'sign-up') {
-      return <CreateAccount/>;
+      return <CreateAccount userLoggedIn={this.state.userLoggedIn}/>;
     } else if (this.state.route.path === 'sign-in') {
       return <SignIn />;
     } else if (this.state.route.path === 'view-other-accounts') {
-      return <ViewOtherAccount />;
+      return <ViewOtherAccount userLoggedIn={this.state.userLoggedIn} />;
     } else if (this.state.route.path === 'view-account') {
       const prevUsername = this.state.route.params.get('username');
-      return <ViewAccount username={prevUsername} />;
+      return <ViewAccount userLoggedIn={this.state.userLoggedIn} username={prevUsername} />;
     } else {
       window.location.hash = '#sign-up';
-      return <CreateAccount/>;
+      return <CreateAccount userLoggedIn={this.state.userLoggedIn} />;
     }
 
   }

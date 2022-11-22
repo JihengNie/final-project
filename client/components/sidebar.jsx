@@ -1,4 +1,5 @@
 import React from 'react';
+import FollowerList from './sidebar-follower-list';
 
 export default class Sidebar extends React.Component {
   constructor(props) {
@@ -35,6 +36,9 @@ export default class Sidebar extends React.Component {
             <a href='#sign-in' className='remove-style'>
               <i onClick={this.handleLogOutClick} className="fa-solid fa-3x fa-right-from-bracket"/>
             </a>
+          </div>
+          <div className='follower-list-holder flex-center-column'>
+            <FollowerList followerList={this.props.followerList} />
           </div>
         </div>
       </>
