@@ -102,9 +102,6 @@ export default class SignIn extends React.Component {
                 <a href='#sign-up' className='log-in-nav'> Sign up</a>
               </div>
             </form>
-            <div className='demo-container'>
-              <button onClick={this.handleDemoClick} className='log-in-nav'> Demo </button>
-            </div>
           </div>
         </div>
       </div>
