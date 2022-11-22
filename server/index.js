@@ -32,7 +32,8 @@ app.post('/api/auth/sign-up', uploadsMiddlewareAws, (req, res, next) => {
   }
   argon2.hash(password)
     .then(hashPassword => {
-      const imgUrl = `/images/${req.file.filename}`;
+      // const imgUrl = `/images/${req.file.filename}`;
+      const imgUrl = req.file.location;
       const sql = `
       insert into "accounts" ("username", "photoUrl","hashedPassword")
       values ($1, $2, $3)
@@ -193,7 +194,8 @@ app.post('/api/uploads', uploadsMiddlewareAws, (req, res, next) => {
   if (!newUsername) {
     throw new ClientError(400, 'username is a required field');
   }
-  const imgUrl = `/images/${req.file.filename}`;
+  // const imgUrl = `/images/${req.file.filename}`;
+  const imgUrl = req.file.location;
   const sql = `
   insert into "accounts" ("username", "photoUrl")
   values ($1, $2)
