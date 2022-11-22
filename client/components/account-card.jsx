@@ -13,7 +13,6 @@ export default class AccountCard extends React.Component {
       ratingValue: 0,
       ratingUsername: this.props.username,
       ratingClicked: false,
-      userLoggedIn: JSON.parse(window.localStorage.getItem('account')),
       accountId: null,
       newComment: null,
       route: parseRoute(window.location.hash),
