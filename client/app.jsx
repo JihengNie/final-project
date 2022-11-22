@@ -17,7 +17,10 @@ export default class App extends React.Component {
 
   componentDidMount() {
     window.addEventListener('hashchange', event => {
-      this.setState({ route: parseRoute(window.location.hash) });
+      this.setState({
+        route: parseRoute(window.location.hash),
+        userLoggedIn: JSON.parse(window.localStorage.getItem('account'))
+      });
     });
   }
 
@@ -35,7 +38,6 @@ export default class App extends React.Component {
       window.location.hash = '#sign-up';
       return <CreateAccount userLoggedIn={this.state.userLoggedIn} />;
     }
-
   }
 
   render() {
