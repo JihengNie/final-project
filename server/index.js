@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const ClientError = require('./client-error');
 const staticMiddleware = require('./static-middleware');
 const errorMiddleware = require('./error-middleware');
-// const uploadsMiddleware = require('./uploads-middleware');
 const authorizationMiddleware = require('./authorization-middleware');
 const uploadsMiddlewareAws = require('./uploads-middleware-aws');
 
@@ -32,7 +31,6 @@ app.post('/api/auth/sign-up', uploadsMiddlewareAws, (req, res, next) => {
   }
   argon2.hash(password)
     .then(hashPassword => {
-      // const imgUrl = `/images/${req.file.filename}`;
       const imgUrl = req.file.location;
       const sql = `
       insert into "accounts" ("username", "photoUrl","hashedPassword")
@@ -188,26 +186,6 @@ app.get('/api/accounts/:username', (req, res, next) => {
 });
 
 // ---------------------------- POST REQUESTS ---------------------//
-
-// app.post('/api/uploads', uploadsMiddlewareAws, (req, res, next) => {
-//   const { newUsername } = req.body;
-//   if (!newUsername) {
-//     throw new ClientError(400, 'username is a required field');
-//   }
-//   // const imgUrl = `/images/${req.file.filename}`;
-//   const imgUrl = req.file.location;
-//   const sql = `
-//   insert into "accounts" ("username", "photoUrl")
-//   values ($1, $2)
-//   returning *
-//   `;
-//   const params = [newUsername, imgUrl];
-//   db.query(sql, params)
-//     .then(result => {
-//       res.json(result.rows[0]);
-//     })
-//     .catch(err => next(err));
-// });
 
 app.post('/api/uploads/comments', (req, res, next) => {
   const { whoComment, commentWho, comment } = req.body;
