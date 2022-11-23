@@ -34,7 +34,7 @@ export default class CreateAccount extends React.Component {
     const form = new FormData();
     form.append('username', this.state.username);
     form.append('password', this.state.password);
-    form.append('image', this.fileInputRef.current.files[0]);
+    form.append('file-to-upload', this.fileInputRef.current.files[0]);
     const requestObj = {
       method: 'POST',
       body: form
@@ -99,8 +99,8 @@ export default class CreateAccount extends React.Component {
                 <input
                     onChange={this.handleUpload}
                     id='new-profile-img'
+                    name='file-to-upload'
                     type='file'
-                    name='profileImg'
                     ref={this.fileInputRef}
                     required
                     accept=".png, .jpg, .jpeg, .gif" />
