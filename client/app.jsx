@@ -10,7 +10,8 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       route: parseRoute(window.location.hash),
-      userLoggedIn: null
+      userLoggedIn: null,
+      isAuthorizing: true
     };
     this.handleSignIn = this.handleSignIn.bind(this);
   }
@@ -26,6 +27,9 @@ export default class App extends React.Component {
         route: parseRoute(window.location.hash)
       });
     });
+    const account = window.localStorage.getItem('account');
+    const userLoggedIn = account ? JSON.parse(account) : null;
+    this.setState({ userLoggedIn, isAuthorizing: false });
   }
 
   renderPage() {
@@ -45,6 +49,7 @@ export default class App extends React.Component {
   }
 
   render() {
+    if (this.state.isAuthorizing) return null;
     return (
       <>
         {this.renderPage()}

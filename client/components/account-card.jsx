@@ -264,7 +264,10 @@ export default class AccountCard extends React.Component {
   }
 
   handleXClick() {
-    this.setState({ toggleCommentBox: false });
+    this.setState({
+      toggleCommentBox: false,
+      ratingValue: 0
+    });
   }
 
   handleCheckClick() {
