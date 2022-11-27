@@ -11,15 +11,20 @@ export default class App extends React.Component {
     this.state = {
       username: null,
       route: parseRoute(window.location.hash),
-      userLoggedIn: JSON.parse(window.localStorage.getItem('account'))
+      userLoggedIn: null
     };
+    this.handleSignIn = this.handleSignIn.bind(this);
+  }
+
+  handleSignIn(result) {
+    window.localStorage.setItem('account', JSON.stringify(result));
+    this.setState({ userLoggedIn: result });
   }
 
   componentDidMount() {
     window.addEventListener('hashchange', event => {
       this.setState({
-        route: parseRoute(window.location.hash),
-        userLoggedIn: JSON.parse(window.localStorage.getItem('account'))
+        route: parseRoute(window.location.hash)
       });
     });
   }
@@ -28,7 +33,7 @@ export default class App extends React.Component {
     if (this.state.route.path === 'sign-up') {
       return <CreateAccount userLoggedIn={this.state.userLoggedIn}/>;
     } else if (this.state.route.path === 'sign-in') {
-      return <SignIn />;
+      return <SignIn onSignIn={this.handleSignIn} />;
     } else if (this.state.route.path === 'view-other-accounts') {
       return <ViewOtherAccount userLoggedIn={this.state.userLoggedIn} />;
     } else if (this.state.route.path === 'view-account') {
