@@ -393,7 +393,7 @@ input[type="submit"] {
   padding: 0.25rem;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 920px) {
   .none-focus-cards {
     display: none;
   }
@@ -409,7 +409,7 @@ input[type="submit"] {
   }
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 920px) {
   .follower-list-holder {
     right: 4rem;
     top: 6rem;
