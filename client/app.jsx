@@ -9,26 +9,34 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: null,
       route: parseRoute(window.location.hash),
-      userLoggedIn: JSON.parse(window.localStorage.getItem('account'))
+      userLoggedIn: null,
+      isAuthorizing: true
     };
+    this.handleSignIn = this.handleSignIn.bind(this);
+  }
+
+  handleSignIn(result) {
+    window.localStorage.setItem('account', JSON.stringify(result));
+    this.setState({ userLoggedIn: result });
   }
 
   componentDidMount() {
     window.addEventListener('hashchange', event => {
       this.setState({
-        route: parseRoute(window.location.hash),
-        userLoggedIn: JSON.parse(window.localStorage.getItem('account'))
+        route: parseRoute(window.location.hash)
       });
     });
+    const account = window.localStorage.getItem('account');
+    const userLoggedIn = account ? JSON.parse(account) : null;
+    this.setState({ userLoggedIn, isAuthorizing: false });
   }
 
   renderPage() {
     if (this.state.route.path === 'sign-up') {
       return <CreateAccount userLoggedIn={this.state.userLoggedIn}/>;
     } else if (this.state.route.path === 'sign-in') {
-      return <SignIn />;
+      return <SignIn onSignIn={this.handleSignIn} />;
     } else if (this.state.route.path === 'view-other-accounts') {
       return <ViewOtherAccount userLoggedIn={this.state.userLoggedIn} />;
     } else if (this.state.route.path === 'view-account') {
@@ -41,6 +49,7 @@ export default class App extends React.Component {
   }
 
   render() {
+    if (this.state.isAuthorizing) return null;
     return (
       <>
         {this.renderPage()}

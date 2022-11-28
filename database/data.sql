@@ -16,7 +16,8 @@ values ('Admin', '/images/Blue.png', 'password'),
 ('Jianni Cariaga', '/c0822/jianni.png', 'password'),
 ('Quan Pham', '/c0822/quan.png', 'password'),
 ('Matthew Kweon', '/c0822/matt.png', 'password'),
-('Ashley Ho', '/c0822/ashley.png', 'password');
+('Ashley Ho', '/c0822/ashley.png', 'password'),
+('Bob Ross', '/images/bobRoss.gif', '$argon2id$v=19$m=4096,t=3,p=1$DkS8z3NzFpr/ibEiCEBjTQ$VDblfUS4/ySVqVSJctyklQ0XkDjwlp36h6/p5aROCRs');
 
 insert into "ratings" ("whoRated", "ratedWho", "rating")
 values (1, 2, 5),
@@ -35,4 +36,5 @@ values (1, 2, 5),
 (1, 14, 5),
 (1, 15, 5),
 (1, 16, 5),
-(1, 17, 5);
+(1, 17, 5),
+(1, 18, 5);

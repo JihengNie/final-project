@@ -44,7 +44,7 @@ export default class SignIn extends React.Component {
     fetch('/api/auth/sign-in', requestObj)
       .then(result => result.json())
       .then(result => {
-        window.localStorage.setItem('account', JSON.stringify(result));
+        this.props.onSignIn(result);
         this.setState({
           token: result.token,
           username: '',
