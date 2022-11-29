@@ -4,7 +4,7 @@ A full-stack application that allows users rate other users. Developed utilizing
 
 ## Why I Built This
 
-I chose this project to improve upon my front-end development skills, particularly responsive design, DOM manipulation, CSS styling/transitions, and JavaScript data manipulation. As a life-long fan of Yu-Gi-Oh, I found this project to be a wonderful development experience, as I got to create an interactive and visual display of one of my favorite games of all time.
+I chose this project to improve upon my front and back end development skills, particularly responsive design, DOM manipulation, CSS styling/transitions, and JavaScript data manipulation. As a life-long fan of Yu-Gi-Oh, I found this project to be a wonderful development experience, as I got to create an interactive and visual display of one of my favorite games of all time.
 
 ## Technologies Used
 - React
@@ -55,7 +55,7 @@ Try the application [here](https://rating-fuze.jihengnie.dev/#sign-up)!
 
 1. Clone the repository
 ```
-git clone https://github.com/arjunkahlon/deck-study.git
+git clone https://github.com/JihengNie/rating-fuze.git
 ```
 2. Install dependencies with Node Package Manager
 ```
